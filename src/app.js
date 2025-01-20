@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const gameRoutes = require('./routes/gameRoutes');
-
+// Define the Express App
 const app = express();
 
 app.use(cors());
