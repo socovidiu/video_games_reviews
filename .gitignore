@@ -51,3 +51,5 @@ debug/
 
 # Optional: Ignore the database migrations directory if applicable
 migrations/
+
+docs/
