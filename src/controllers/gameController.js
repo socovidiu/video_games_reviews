@@ -1,6 +1,6 @@
 const { Game, GameDetails, GameImage, GameReview, User  } = require('../models/game');
-const { fetchGamesList } = require('../../services/rawgService');
-const { DataTypes } = require('sequelize');
+const { fetchGamesList } = require('../services/rawgService');
+
 
 // Get all games
 const getAllGames = async (req, res) => {
@@ -36,22 +36,21 @@ async function addGame(req, res) {
       description: gameData.description_raw,
       platforms: gameData.platforms.map((p) => p.platform.name).join(', '),
     });
+    // Add the cover photo
+    if (gameData.background_image) {
+      await GameImage.upsert({
+        gameId: gameData.id,
+        imageUrl: gameData.background_image,
+        type: 'cover', // Tagging this as the cover image
+      });
+    }
 
+    console.debug(gameData,name ,"was added to the database")
     res.status(201).json({ message: 'Game added successfully', game: gameData });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 }
-
-
-
-
-
-// const bcrypt = require('bcrypt');
-
-// const hashedPassword = await bcrypt.hash('yourpassword123', 10); // Hash password
-
-
 
 
 module.exports = { getAllGames, addGame };

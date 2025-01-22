@@ -1,6 +1,6 @@
 // Create a Service to Fetch Game Details
 const axios = require('axios');
-const { Game, GameDetails, GameImage } = require('../src/models');
+const { Game, GameDetails, GameImage } = require('../models/game');
 
 const RAWG_API_BASE_URL = 'https://api.rawg.io/api';
 
