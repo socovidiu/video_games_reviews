@@ -1,6 +1,8 @@
 const express = require('express');
 const { userSignup, userLogin } = require('../controllers/userController');
 const { body }  = require('express-validator');
+const authenticateToken = require('../middleware/authMiddleware');
+const authorizeRoles= require('../middleware/rolesMiddleware');
 
 const router = express.Router();
 
@@ -23,5 +25,15 @@ router.post(
     ],
     userLogin
 );
+
+// Example route for admins only
+router.get('/admin',authenticateToken, authorizeRoles('admin'), (req, res) => {
+    res.json({ message: 'Welcome, Admin!' });
+});
+
+// All authenticated users can access
+router.get('/user', authenticateToken, (req, res) => {
+    res.json({ message: `Welcome, ${req.user.name}` });
+});
 
 module.exports = router;

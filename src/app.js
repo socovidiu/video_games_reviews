@@ -25,6 +25,6 @@ app.use(express.json());
 
 app.use('/api/games', gameRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/protected', protectedRoutes);
+app.use('/api', protectedRoutes);
 
 module.exports = app;
