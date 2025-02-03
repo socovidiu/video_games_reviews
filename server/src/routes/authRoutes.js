@@ -1,5 +1,5 @@
 const express = require('express');
-const { userSignup, userLogin } = require('../controllers/userController');
+const { userSignup, userLogin, getAuthenticatedUser } = require('../controllers/userController');
 const { body }  = require('express-validator');
 const authenticateToken = require('../middleware/authMiddleware');
 const authorizeRoles= require('../middleware/rolesMiddleware');
@@ -16,9 +16,8 @@ router.post('/signup',
     userSignup
 );
   
-// User Login
-router.post(
-    '/login',
+// User Log in
+router.post('/login',
     [
         body('email').isEmail().withMessage('Invalid email'),
         body('password').notEmpty().withMessage('Password is required'),
@@ -26,14 +25,23 @@ router.post(
     userLogin
 );
 
+// User Log out
+router.post('/logout',
+    [
+        body('email').isEmail().withMessage('Invalid email'),
+        body('password').notEmpty().withMessage('Password is required'),
+    ],
+    userLogin
+);
+
+
 // Example route for admins only
 router.get('/admin',authenticateToken, authorizeRoles('admin'), (req, res) => {
     res.json({ message: 'Welcome, Admin!' });
 });
 
-// All authenticated users can access
-router.get('/user', authenticateToken, (req, res) => {
-    res.json({ message: `Welcome, ${req.user.name}` });
-});
+// Protected route to get user details
+router.get("/me", authenticateToken, getAuthenticatedUser);
+
 
 module.exports = router;

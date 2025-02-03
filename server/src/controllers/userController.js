@@ -36,6 +36,7 @@ const userSignup = async (req, res) => {
 const userLogin = async (req, res) => {
     //Extracts the validation errors of an express request
     const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
     }
@@ -55,11 +56,53 @@ const userLogin = async (req, res) => {
         }
         //create a JSON Web Token, authetication that will expire after 1h
         const token = jwt.sign({ Id: user.id, username: user.username, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
+        console.debug("Users want to login. Token: \n", token);
+        // Send token to the client
+        console.debug(user)
+        res.status(200).json({
+            token,
+            user: {
+            id: user._id,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+            },
+        });
 
-        res.json({ message: 'Login successful', token });
         } catch (error) {
         res.status(500).json({ error: error.message });
     }
 }
 
-module.exports = { userSignup, userLogin };
+
+// Returns the details of the user
+const getAuthenticatedUser = async (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1]; // Extract token
+    
+    if (!token) {
+        return res.status(401).json({ message: 'Unauthorized. No token provided.' });
+    }
+    
+    try {
+        // Verify token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        const id = decoded.Id;
+        // Fetch user details based on token payload
+        const user = await User.findOne({ where: { id }, });
+    
+        if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+        }
+    
+        // Send user data back
+        res.json({ user: { username: decoded.username, email: decoded.email, role: decoded.role } });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Failed to authenticate token.' });
+    }
+};
+  
+
+
+module.exports = { userSignup, userLogin, getAuthenticatedUser };
