@@ -3,6 +3,7 @@ const { User  } = require('../models/game');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { validationResult }= require('express-validator');
+const { tokenBlacklist } = require("../utils/tokenBlacklist");
 
 // Get the JSON Web Token for authentication
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -56,9 +57,9 @@ const userLogin = async (req, res) => {
         }
         //create a JSON Web Token, authetication that will expire after 1h
         const token = jwt.sign({ Id: user.id, username: user.username, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
-        console.debug("Users want to login. Token: \n", token);
+        // console.debug("Users want to login. Token: \n", token);
         // Send token to the client
-        console.debug(user)
+        // console.debug(user)
         res.status(200).json({
             token,
             user: {
@@ -74,6 +75,24 @@ const userLogin = async (req, res) => {
     }
 }
 
+//user Logout
+const userLogout = async (req, res) => {
+    try {
+        const token = req.headers.authorization?.split(" ")[1];
+
+        if (!token) {
+            return res.status(400).json({ message: "No token provided" });
+        }
+
+        // Add token to a blacklist (if you want to invalidate it)
+        tokenBlacklist.add(token);
+
+        return res.status(200).json({ message: "Logged out successfully" });
+    } catch (error) {
+        console.error("Logout error:", error);
+        return res.status(500).json({ message: "Failed to logout" });
+    }
+}
 
 // Returns the details of the user
 const getAuthenticatedUser = async (req, res) => {
@@ -90,13 +109,12 @@ const getAuthenticatedUser = async (req, res) => {
         const id = decoded.Id;
         // Fetch user details based on token payload
         const user = await User.findOne({ where: { id }, });
-    
         if (!user) {
         return res.status(404).json({ message: 'User not found' });
         }
-    
+
         // Send user data back
-        res.json({ user: { username: decoded.username, email: decoded.email, role: decoded.role } });
+        res.json({ user: { username: user.username, email: user.email, role: user.role } });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Failed to authenticate token.' });
@@ -105,4 +123,4 @@ const getAuthenticatedUser = async (req, res) => {
   
 
 
-module.exports = { userSignup, userLogin, getAuthenticatedUser };
+module.exports = { userSignup, userLogin, userLogout, getAuthenticatedUser };

@@ -13,6 +13,7 @@ const Login: React.FC = () => {
     e.preventDefault();
     try {
       await login(email, password);
+      console.log("Log in executed");
       navigate("/dashboard");
     } catch (err: any) {
       console.error("Login error:",error);

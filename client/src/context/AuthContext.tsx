@@ -11,9 +11,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<any>(null);
   const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
 
-  // Set Axios default headers globally
-  axios.defaults.headers.common["Authorization"] = token ? `Bearer ${token}` : "";
+  // Update Axios default headers whenever token changes
+  useEffect(() => {
+    axios.defaults.headers.common["Authorization"] = token ? `Bearer ${token}` : "";
+    console.log("Updated Authorization header:", axios.defaults.headers.common["Authorization"]);
+  }, [token]);
 
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    console.log("Stored token on mount:", storedToken);
+    if (storedToken) {
+      setToken(storedToken);
+    }
+  }, []);
 
   useEffect(() => {
 
@@ -52,10 +62,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = async () => {
     // remove the token
-    localStorage.removeItem("token");
-    await axios.post(`${API_BASE_URL}/logout`, {});
-    setUser(null);
-    setToken(null);
+    try {
+      await axios.post(`${API_BASE_URL}/logout`, {}, { withCredentials: true });
+      localStorage.removeItem("token"); // Clear token
+      setUser(null);
+      setToken(null);
+      window.location.href = "/"; // Redirect to login
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   return (

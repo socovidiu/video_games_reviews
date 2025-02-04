@@ -1,6 +1,7 @@
 // To secure specific routes, create middleware to verify the JWT.
 
 const jwt = require('jsonwebtoken');
+const { isBlacklisted } = require("../utils/tokenBlacklist");
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 
 /*
@@ -24,6 +25,9 @@ const authenticateToken = (req, res, next) => {
 
   const token = authHeader.split(' ')[1];
 
+  if (!token || isBlacklisted(token)) {
+    return res.status(403).json({ message: "Invalid or expired token" });
+  }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded; // Attach user info to request object

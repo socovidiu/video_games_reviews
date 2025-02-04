@@ -1,5 +1,5 @@
 const express = require('express');
-const { userSignup, userLogin, getAuthenticatedUser } = require('../controllers/userController');
+const { userSignup, userLogin, userLogout, getAuthenticatedUser } = require('../controllers/userController');
 const { body }  = require('express-validator');
 const authenticateToken = require('../middleware/authMiddleware');
 const authorizeRoles= require('../middleware/rolesMiddleware');
@@ -26,13 +26,7 @@ router.post('/login',
 );
 
 // User Log out
-router.post('/logout',
-    [
-        body('email').isEmail().withMessage('Invalid email'),
-        body('password').notEmpty().withMessage('Password is required'),
-    ],
-    userLogin
-);
+router.post('/logout', userLogout);
 
 
 // Example route for admins only

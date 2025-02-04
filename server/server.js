@@ -4,6 +4,7 @@ const sequelize = require('./src/config/db');
 
 const PORT = process.env.PORT;
 
+
 sequelize.authenticate()
   .then(() => {
     console.log('Database connected...');

@@ -8,10 +8,15 @@ const sequelize = require('./config/db');
 
 const { Game, GameDetails, GameImage, GameReview, User } = require('./models/game');
 
+
 // Define the Express App
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5173", // Frontend origin
+  credentials: true, // Allow credentials
+}));
+
 app.use(express.json());
 
 (async () => {
