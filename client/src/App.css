@@ -4,6 +4,17 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  height: 100%;
+  --navbar-height: 64px; /* Adjust this value as needed */
+
+}
+
+body {
+  padding-top: var(--navbar-height);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 .logo {
@@ -42,27 +53,23 @@
   color: #888;
 }
 
+h1, h2{
+  margin: 0;
+  padding: 5px;
+}
+
+h3, h4, h5, h6, p {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
 Rather than making a massive change to your code. Simply give the div the background-color attribute and clear the floating elements with clear:both; on a break or any element to make it recognize the elements.
 
 Here is a working JSFiddle: http://jsfiddle.net/fLj5qvc7/
 
-HTML
 
-<div>
-    <h2 class="alignleft">A</h2>
-    <h2 class="alignright">B</h2>    
-    <br style="clear:both;" />
-</div>
-CSS
-
-h2 {
-    color: #FFF;
-    letter-spacing: 1px;
-    padding: 5px;
-    margin:0;
-}
-
-.alignleft {
-
-  float: left;
-}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Game } from '../types/Game';
 import { fetchGames } from '../services/api';
 import GameCard from '../components/GameCard';
+import {Game} from "../types/Game"
 
 const HomePage: React.FC = () => {
 
@@ -13,6 +13,7 @@ const HomePage: React.FC = () => {
     const loadGames = async () => {
       try {
         const data = await fetchGames();
+        console.log('Fetched games:', data); // Debug the structure
         setGames(data);
       } catch (error) {
         setError('Failed to load games');
@@ -23,12 +24,22 @@ const HomePage: React.FC = () => {
     loadGames();
   }, []);
 
+ 
+
+
   if (loading) return <p>Loading games...</p>;
   if (error) return <p>{error}</p>;
+  if (!games?.length){
+    return <p>No games available.</p>;
+  } 
+  else{
+    console.log(games);
 
- 
+  }
+
   return (
-    <div className="container">
+    
+    <div className="container ">
       <h1 className="text-3xl font-bold my-4">Video Game Reviews</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {games.map((game) => (

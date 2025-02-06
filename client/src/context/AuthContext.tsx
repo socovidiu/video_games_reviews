@@ -67,7 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.removeItem("token"); // Clear token
       setUser(null);
       setToken(null);
-      window.location.href = "/"; // Redirect to login
+      window.location.href = "/"; // Redirect to homepage
     } catch (error) {
       console.error("Logout failed:", error);
     }

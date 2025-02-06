@@ -5,7 +5,7 @@ import axios from "axios";
 import { UserData } from "../types/User"
 
 const Dashboard: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
   const [userData, setUserData] = useState<UserData | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -63,7 +63,7 @@ const Dashboard: React.FC = () => {
     }
 
     return (
-        <div>
+        <div className= "container mx-auto p-4">
             <h1>Welcome, {userData.username}</h1>
             <p>Email: {userData.email}</p>
             <p>Role: {userData.role}</p>
