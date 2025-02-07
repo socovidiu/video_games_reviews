@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { addReview } from '../services/api';
+import { ReviewData } from '../types/Reviews'
 
 interface AddReviewFormProps {
   gameId: number;
-  onReviewAdded: () => void;
+  onReviewAdded: (newReview: ReviewData) => void;
 }
 
 const AddReviewForm: React.FC<AddReviewFormProps> = ({ gameId, onReviewAdded }) => {
@@ -15,14 +16,21 @@ const AddReviewForm: React.FC<AddReviewFormProps> = ({ gameId, onReviewAdded }) 
     e.preventDefault();
 
     try {
-      await addReview(gameId,comment,rating);
-      setComment('');
-      setRating(0);
-      onReviewAdded(); // Inform parent component of the new review
+      const response = await addReview(gameId,comment,rating);
+      if (response) {
+        onReviewAdded(response); // Update with the latest reviews
+        setComment('');
+        setRating(0);
+      } else {
+        console.error('Failed to add review');
+      }
     } catch (error) {
       setError('Failed to add review. Please try again.');
     }
   };
+
+
+
 
   return (
     <form onSubmit={handleSubmit} className="p-4 border rounded-lg">

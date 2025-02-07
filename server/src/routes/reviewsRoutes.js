@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 /* 
-POST /api/reviews/:gameId/reviews
+POST /api/games/:gameId/reviews
 */
 router.post('/:gameId/reviews', authenticateToken, addReview);
 
@@ -21,7 +21,7 @@ router.get('/:gameId/reviews', getAllReviews);
 router.put('/:gameId/reviews/:id', authenticateToken, updateReview);
 
 /*
-// DELETE /api/games/:id
+// DELETE /api/games/:gameId/reviews/:id
 */
 router.delete('/:gameId/reviews/:id', authenticateToken, deleteReview);
 

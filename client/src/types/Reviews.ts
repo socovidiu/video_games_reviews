@@ -4,4 +4,5 @@ export interface ReviewData {
     username: string;
     comment: string;
     rating: number;
+    createdAt: string;
 }

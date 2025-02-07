@@ -92,7 +92,7 @@ const getGameDetails = async (req, res) => {
         {
           model: GameReview,
           as: 'reviews', // Ensure this alias matches the one defined in associations
-          attributes: ['id', 'userId', 'username', 'comment', 'rating'],
+          attributes: ['id', 'userId', 'username', 'comment', 'rating', 'createdAt'],
         },
         {
           model: GameImage,

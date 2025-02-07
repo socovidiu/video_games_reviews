@@ -18,7 +18,9 @@ const GameDetailsPage: React.FC = () => {
     const [gameImages, setGameImages] = React.useState<GameImage[]>([]);
     const [reviews, setReviews] = React.useState<ReviewData[]>([]);
 
-    // State to sen review data
+    // Ensure unique reviews by using the review `id`
+    const uniqueReviews = Array.from(new Map(reviews.map(r => [r.id, r])).values());
+
 
 
     const [loading, setLoading] = React.useState(true);
@@ -56,13 +58,15 @@ const GameDetailsPage: React.FC = () => {
     }, [gameId]);
 
     // Inside the component
-    const handleReviewAdded = () => {
-        if (!gameId) {
-            console.error('Game ID is missing');
-            return;
-        }
-        // Reload reviews after a new one is added
-        fetchGameDetails(gameId);
+    const handleReviewAdded = (newReview: ReviewData) => {
+        // setReviews((prevReviews) => [...prevReviews, newReview]);
+        // Ensure no duplicate reviews by checking review IDs
+        setReviews((prevReviews) => {
+            if (!prevReviews.find((review) => review.id === newReview.id)) {
+            return [...prevReviews, newReview];
+            }
+            return prevReviews;
+      });
     };
 
     if (loading) {
@@ -122,8 +126,8 @@ const GameDetailsPage: React.FC = () => {
             </div>
             {/* Render reviews */}
             <div className="mt-4">
-                {reviews.map((review: any) => (
-                    <ReviewCard key={review.id} review={reviews} />
+                {uniqueReviews.map((review: any) => (
+                    <ReviewCard key={review.id} review={review} />
                 ))}
             </div>
             {/* Add Review Form */}

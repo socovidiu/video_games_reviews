@@ -32,8 +32,9 @@ export const fetchGameDetails = async (id: string | number): Promise<FetchGameDe
   return response.data;
 };
 
-const token = localStorage.getItem('token'); // Assuming token storage in localStorage
 export const addReview = async (gameId:  string | number, comment: string, rating: number) => {
+
+  const token = localStorage.getItem('token'); // Assuming token storage in localStorage
 
   const response = await axios.post(`${API_BASE_URL}/games/${gameId}/reviews`,
   { comment, rating },
@@ -45,6 +46,16 @@ export const addReview = async (gameId:  string | number, comment: string, ratin
   });
   
   console.debug('Raw response: ', response);
-
+  return response.data;
 };
 
+export const fetchUpdatedReviews = async (gameId:  string | number): Promise<ReviewData> => {
+
+  // try {
+    const response = await axios.get(`${API_BASE_URL}/games/${gameId}/reviews`,);
+    const data = await response.data;
+    return data;
+  // } catch (error) {
+  //   console.error('Error fetching reviews:', error);
+  // }
+};

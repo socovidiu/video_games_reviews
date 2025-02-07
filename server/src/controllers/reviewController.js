@@ -44,9 +44,17 @@ const addReview = async (req, res) => {
             rating,
         });
     
+        const response = {
+            id:  review.id,
+            userId: review.userId,
+            username: review.username,
+            comment: review.comment,
+            rating: review.rating,
+            createdAt: review.createdAt,
+        }
         
         console.log("New review added");
-        res.status(201).json({ message: 'Review added successfully', review});
+        res.status(201).json(review);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Failed to add review' });
@@ -60,7 +68,7 @@ const getAllReviews = async (req, res) => {
     try {
         const reviews = await GameReview.findAll({
             where: { gameId },
-            attributes: ['username', 'comment', 'rating', 'createdAt'], // Include desired fields
+            attributes: ['id', 'userId', 'username', 'comment', 'rating', 'createdAt'], // Include desired fields
         });
         res.status(200).json(reviews);
     } catch (error) {
