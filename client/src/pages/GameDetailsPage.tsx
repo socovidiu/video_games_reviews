@@ -4,17 +4,21 @@ import { fetchGameDetails, } from '../services/api';
 import ReviewCard from '../components/ReviewCard';
 import { ReviewData } from '../types/Reviews';
 import { GameData, GameDetails, GameImage } from "../types/Game";
+import AddReviewForm from '../components/AddReviewForm';
 
 
 
 const GameDetailsPage: React.FC = () => {
     const { id } = useParams<{ id: string}>();
+    const gameId = id as string;
 
     // State to store game details
     const [gameData, setGameata] = React.useState<GameData>();
     const [gameDetails, setGameDetails] = React.useState<GameDetails>();
     const [gameImages, setGameImages] = React.useState<GameImage[]>([]);
     const [reviews, setReviews] = React.useState<ReviewData[]>([]);
+
+    // State to sen review data
 
 
     const [loading, setLoading] = React.useState(true);
@@ -26,7 +30,7 @@ const GameDetailsPage: React.FC = () => {
 
     React.useEffect(() => {
 
-        if (!id) {
+        if (!gameId) {
             console.error('Error: id is undefined');
             setError('Invalid game ID.');
             setLoading(false);
@@ -35,13 +39,12 @@ const GameDetailsPage: React.FC = () => {
 
         const loadGameDetails = async () => {
             try {
-            const data = await fetchGameDetails(id);
+            const data = await fetchGameDetails(gameId);
 
             setGameata(data.gameData);
             setGameDetails(data.gameDetails);
             setGameImages(data.gameImages);             
             setReviews(data.gameReviews);
-
             } catch (err: any) {
             setError(err.message);
             } finally {
@@ -50,7 +53,17 @@ const GameDetailsPage: React.FC = () => {
         };
 
         loadGameDetails();
-    }, [id]);
+    }, [gameId]);
+
+    // Inside the component
+    const handleReviewAdded = () => {
+        if (!gameId) {
+            console.error('Game ID is missing');
+            return;
+        }
+        // Reload reviews after a new one is added
+        fetchGameDetails(gameId);
+    };
 
     if (loading) {
     return <div className="text-center text-lg">Loading game details...</div>;
@@ -107,12 +120,14 @@ const GameDetailsPage: React.FC = () => {
                     <p> {platforms}</p>
                 </div>
             </div>
-            {/* Game reviews */}
+            {/* Render reviews */}
             <div className="mt-4">
                 {reviews.map((review: any) => (
                     <ReviewCard key={review.id} review={reviews} />
                 ))}
             </div>
+            {/* Add Review Form */}
+            <AddReviewForm gameId={gameData.id} onReviewAdded={handleReviewAdded} />
         </div>
 
         {/* Right Section: Images */}

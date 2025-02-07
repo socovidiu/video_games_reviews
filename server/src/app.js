@@ -32,6 +32,6 @@ app.use(express.json());
 app.use('/api/games', gameRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api', protectedRoutes);
-app.use('/api/reviews', reviewRoutes)
+app.use('/api/games', reviewRoutes)
 
 module.exports = app;

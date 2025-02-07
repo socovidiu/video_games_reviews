@@ -32,5 +32,19 @@ export const fetchGameDetails = async (id: string | number): Promise<FetchGameDe
   return response.data;
 };
 
+const token = localStorage.getItem('token'); // Assuming token storage in localStorage
+export const addReview = async (gameId:  string | number, comment: string, rating: number) => {
 
+  const response = await axios.post(`${API_BASE_URL}/games/${gameId}/reviews`,
+  { comment, rating },
+  {
+    headers: {
+        Authorization: `Bearer ${token}`,
+    },
+    withCredentials: true,
+  });
+  
+  console.debug('Raw response: ', response);
+
+};
 

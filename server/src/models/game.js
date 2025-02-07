@@ -43,9 +43,9 @@ const GameReview = sequelize.define('GameReview', {
     references: { model: 'Games', key: 'id' },
     allowNull: false,
   },
-  userId: { type: DataTypes.INTEGER, allowNull: false }, // Reference to a User table if needed
-  username: { type: DataTypes.STRING, allowNull: false }, // Name of the reviewer
-  comment: { type: DataTypes.TEXT },
+  userId: { type: DataTypes.INTEGER, allowNull: false, }, // Reference to a User table if needed
+  username: { type: DataTypes.STRING, allowNull: false, }, // Name of the reviewer
+  comment: { type: DataTypes.TEXT, allowNull: false, },
   rating: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -112,6 +112,7 @@ GameReview.belongsTo(Game, { foreignKey: 'gameId', as: 'game' });
 
 User.hasMany(GameReview, { foreignKey: 'userId', onDelete: 'CASCADE' });
 GameReview.belongsTo(User, { foreignKey: 'userId' });
+
 
 // Optional: A many-to-many relationship for favorites or wishlist
 User.belongsToMany(Game, { through: 'UserGames', as: 'favorites' });

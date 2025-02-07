@@ -6,23 +6,23 @@ const router = express.Router();
 
 
 /* 
-POST /api/reviews/:gameId 
+POST /api/reviews/:gameId/reviews
 */
-router.post('/:gameId', authenticateToken, addReview);
+router.post('/:gameId/reviews', authenticateToken, addReview);
 
 /* 
-GET /api/reviews/:gameId
+GET /api/games/:gameId/reviews
 */
-router.get('/:gameId', getAllReviews);
+router.get('/:gameId/reviews', getAllReviews);
 
 /*
-// PUT /api/reviews/:id
+// PUT /api/games/:gameId/reviews/:id
 */
-router.put('/:id', authenticateToken, updateReview);
+router.put('/:gameId/reviews/:id', authenticateToken, updateReview);
 
 /*
-// DELETE /api/reviews/:id
+// DELETE /api/games/:id
 */
-router.delete('/:id', authenticateToken, deleteReview);
+router.delete('/:gameId/reviews/:id', authenticateToken, deleteReview);
 
 module.exports = router;
