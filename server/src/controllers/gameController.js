@@ -14,7 +14,21 @@ const getAllGames = async (req, res) => {
         },
       ],
     });
-    res.status(200).json(games);
+
+    // Transform the response
+    const transformedGames = games.map(game => ({
+      gameData: {
+        id: game.id,
+        title: game.title,
+        slug: game.slug,
+        genre: game.genre,
+        rating: game.rating,
+        released: game.released,
+      },
+      gameImages: game.gameimage, // Assuming gameimage is already an array
+    }));
+
+    res.status(200).json(transformedGames);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch games' });
   }
@@ -88,11 +102,27 @@ const getGameDetails = async (req, res) => {
       ],
     });
 
+  
     if (!game) {
       return res.status(404).json({ message: 'Game not found' });
     }
-    console.debug("game data: ", game)
-    res.status(200).json(game);
+
+    // Transform the response
+    const transformedGame = {
+      gameData: {
+        id: game.id,
+        title: game.title,
+        slug: game.slug,
+        genre: game.genre,
+        rating: game.rating,
+        released: game.released,
+      },
+      gameDetails: game.gamedetals,
+      gameReviews: game.reviews,   //Assuming reviews is already an array
+      gameImages: game.gameimage, // Assuming gameimage is already an array
+    };
+    console.debug("game data: ", transformedGame)
+    res.status(200).json(transformedGame);
   } catch (error) {
     console.error('Error fetching game details:', error);
     res.status(500).json({ message: 'Failed to fetch game details' });

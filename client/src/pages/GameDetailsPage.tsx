@@ -11,11 +11,10 @@ const GameDetailsPage: React.FC = () => {
     const { id } = useParams<{ id: string}>();
 
     // State to store game details
-    // const [gameData, setGameata] = React.useState<GameData>();
-    // const [gameDetails, setGameDetails] = React.useState<GameDetails>();
-    // const [gameImages, setGameImages] = React.useState<GameImage[]>([]);
-    // const [reviews, setReviews] = React.useState<ReviewData[]>([]);
-    const [gameDetails, setGameDetails] = React.useState<any>(null);
+    const [gameData, setGameata] = React.useState<GameData>();
+    const [gameDetails, setGameDetails] = React.useState<GameDetails>();
+    const [gameImages, setGameImages] = React.useState<GameImage[]>([]);
+    const [reviews, setReviews] = React.useState<ReviewData[]>([]);
 
 
     const [loading, setLoading] = React.useState(true);
@@ -38,11 +37,10 @@ const GameDetailsPage: React.FC = () => {
             try {
             const data = await fetchGameDetails(id);
 
-            // setGameata(data.gameData);
-            setGameDetails(data);
-            // Handle game images directly as an array
-            // setGameImages(data.gameImages);             
-            // setReviews(data.reviewData);
+            setGameata(data.gameData);
+            setGameDetails(data.gameDetails);
+            setGameImages(data.gameImages);             
+            setReviews(data.gameReviews);
 
             } catch (err: any) {
             setError(err.message);
@@ -62,21 +60,20 @@ const GameDetailsPage: React.FC = () => {
     return <div className="text-center text-red-500">Error: {error}</div>;
     }
 
-    if (!gameDetails ) {
+    if (!gameDetails || !gameData) {
     return <div className="text-center text-gray-500">No game details found.</div>;
     }
 
-    // const description = gameDetails.description;
-    // const platforms = gameDetails.platforms;
-    const description = gameDetails.gamedetals.description;
-    const platforms = gameDetails.gamedetals.platforms;
-    
+
+    const description = gameDetails.description;
+    const platforms = gameDetails.platforms;
+
     return (
     <div className="container mx-auto p-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Left Section: Game Details */}
         <div className="col-span-2">
-            <h1 className="text-2xl font-bold mb-4 ">{gameDetails?.title}</h1>
+            <h1 className="text-2xl font-bold mb-4 ">{gameData.title}</h1>
             <div>
                 {/* Description Section */}
                 <h2 className="text-xl font-semibold mb-2 text-left">Description</h2>
@@ -94,15 +91,15 @@ const GameDetailsPage: React.FC = () => {
             <div className="grid grid-cols-2 gap-4 mt-6">
                 <div>
                     <p><strong>Genre</strong></p>
-                    <p> {gameDetails?.genre}</p>
+                    <p> {gameData?.genre}</p>
                 </div>
                 <div>
                     <p><strong>Release Date</strong></p>
-                    <p> {gameDetails?.released}</p>
+                    <p> {gameData?.released}</p>
                 </div>
                 <div>
                     <p><strong>Rating</strong></p>
-                    <p className="text-yellow-500">⭐ {gameDetails?.rating}/5</p>
+                    <p className="text-yellow-500">⭐ {gameData?.rating}/5</p>
 
                 </div>
                 <div>
@@ -112,22 +109,15 @@ const GameDetailsPage: React.FC = () => {
             </div>
             {/* Game reviews */}
             <div className="mt-4">
-                {gameDetails.reviews.map((review: any) => (
-                    // <ReviewCard key={review.id} review={reviews} />
-                    <li
-                    key={review.id}
-                    className="border p-4 rounded shadow-sm bg-gray-50"
-                    >
-                    <p><strong>{review.username}</strong> rated it {review.rating}/5</p>
-                    <p>{review.comment}</p>
-                    </li>
+                {reviews.map((review: any) => (
+                    <ReviewCard key={review.id} review={reviews} />
                 ))}
             </div>
         </div>
 
         {/* Right Section: Images */}
         <div className="col-span-1 space-y-4">
-            {gameDetails.gameImages.map((image:GameImage, index: number) => (
+            {gameImages.map((image:GameImage, index: number) => (
             <img
               key={index}
               src={image.imageUrl}
