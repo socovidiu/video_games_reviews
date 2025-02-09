@@ -32,6 +32,7 @@ export const fetchGameDetails = async (id: string | number): Promise<FetchGameDe
   return response.data;
 };
 
+// add a review for a specified game 
 export const addReview = async (gameId:  string | number, comment: string, rating: number) => {
 
   const token = localStorage.getItem('token'); // Assuming token storage in localStorage
@@ -49,13 +50,32 @@ export const addReview = async (gameId:  string | number, comment: string, ratin
   return response.data;
 };
 
-export const fetchUpdatedReviews = async (gameId:  string | number): Promise<ReviewData> => {
+// delete reviews that user added
+export const deleteReview = async (gameId: string | number, reviewId: string | number) => {
+  const token = localStorage.getItem('token');
 
-  // try {
-    const response = await axios.get(`${API_BASE_URL}/games/${gameId}/reviews`,);
-    const data = await response.data;
-    return data;
-  // } catch (error) {
-  //   console.error('Error fetching reviews:', error);
-  // }
+  if (!token) {
+    throw new Error('User not authenticated');
+  }
+
+  const response = await axios.delete(`${API_BASE_URL}/games/${gameId}/reviews/${reviewId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    withCredentials: true,
+  });
+
+  return response.data;
 };
+
+
+// export const fetchUpdatedReviews = async (gameId:  string | number): Promise<ReviewData> => {
+
+//   // try {
+//     const response = await axios.get(`${API_BASE_URL}/games/${gameId}/reviews`,);
+//     const data = await response.data;
+//     return data;
+//   // } catch (error) {
+//   //   console.error('Error fetching reviews:', error);
+//   // }
+// };

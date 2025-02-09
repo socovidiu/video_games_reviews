@@ -57,7 +57,7 @@ const GameDetailsPage: React.FC = () => {
         loadGameDetails();
     }, [gameId]);
 
-    // Inside the component
+    // Ation to add new review
     const handleReviewAdded = (newReview: ReviewData) => {
         // setReviews((prevReviews) => [...prevReviews, newReview]);
         // Ensure no duplicate reviews by checking review IDs
@@ -67,6 +67,11 @@ const GameDetailsPage: React.FC = () => {
             }
             return prevReviews;
       });
+
+    };
+    // Action to delete review
+    const handleReviewDeleted = (reviewId: number) => {
+        setReviews((prevReviews) => prevReviews.filter((r) => r.id !== reviewId));
     };
 
     if (loading) {
@@ -90,7 +95,7 @@ const GameDetailsPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Left Section: Game Details */}
         <div className="col-span-2">
-            <h1 className="text-2xl font-bold mb-4 ">{gameData.title}</h1>
+            <h1 className="text-3xl font-bold text-center mt-4 ">{gameData.title}</h1>
             <div>
                 {/* Description Section */}
                 <h2 className="text-xl font-semibold mb-2 text-left">Description</h2>
@@ -99,7 +104,7 @@ const GameDetailsPage: React.FC = () => {
                 </p>
                 <button
                 onClick={() => setShowFullDescription(!showFullDescription)}
-                className="text-blue-400 hover:underline"
+                className="bg-red-300 text-blue-400 hover:underline"
                 >
                 {showFullDescription ? 'Show less' : 'Read more'}
                 </button>
@@ -126,8 +131,13 @@ const GameDetailsPage: React.FC = () => {
             </div>
             {/* Render reviews */}
             <div className="mt-4">
-                {uniqueReviews.map((review: any) => (
-                    <ReviewCard key={review.id} review={review} />
+                {uniqueReviews.map((review: ReviewData) => (
+                    <ReviewCard 
+                    key={review.id}
+                    review={review}
+                    gameId={gameData.id}
+                    onDeleteReview={handleReviewDeleted}
+                    />
                 ))}
             </div>
             {/* Add Review Form */}
