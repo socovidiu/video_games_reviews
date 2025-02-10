@@ -2,6 +2,8 @@ const { GameReview, Game } = require('../models/game');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { validationResult }= require('express-validator');
+const {updateGameRating} = require('../utils/ratings');
+
 
 
 //Add a Review
@@ -52,8 +54,9 @@ const addReview = async (req, res) => {
             rating: review.rating,
             createdAt: review.createdAt,
         }
-        
-        console.log("New review added");
+        //update game rating
+        const newAverageRating = await updateGameRating(parsedGameId);
+        console.log("New rating:", newAverageRating);
         res.status(201).json(review);
     } catch (error) {
         console.error(error);
@@ -97,7 +100,12 @@ const updateReview = async (req, res) => {
         review.comment = comment;
         review.rating = rating;
         await review.save();
-    
+        // Get gameId before deleting
+        const gameId = review.gameId;
+        //update game rating
+        const newAverageRating = await updateGameRating(gameId);
+        console.log("New rating:", newAverageRating);
+
         res.status(200).json({ message: 'Review updated successfully', review });
     } catch (error) {
         console.error(error);
@@ -121,9 +129,12 @@ const deleteReview = async (req, res) => {
         if (review.userId !== userId && !['admin'].includes(req.user.role)) {
             return res.status(403).json({ message: 'You can only delete your own reviews' });
         }
-        
+        // Get gameId before deleting
+        const gameId = review.gameId;
         await review.destroy();
-    
+        //update game rating
+        const newAverageRating = await updateGameRating(gameId);
+        console.log("New rating:", newAverageRating);
         res.status(200).json({ message: 'Review deleted successfully', review });
     } catch (error) {
         console.error(error);

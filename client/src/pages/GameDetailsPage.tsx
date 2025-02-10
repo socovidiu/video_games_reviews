@@ -22,7 +22,6 @@ const GameDetailsPage: React.FC = () => {
     const uniqueReviews = Array.from(new Map(reviews.map(r => [r.id, r])).values());
 
 
-
     const [loading, setLoading] = React.useState(true);
     const [error, setError] = React.useState<string | null>(null);
 
@@ -66,7 +65,7 @@ const GameDetailsPage: React.FC = () => {
             return [...prevReviews, newReview];
             }
             return prevReviews;
-      });
+        });
 
     };
     // Action to delete review
@@ -104,7 +103,7 @@ const GameDetailsPage: React.FC = () => {
                 </p>
                 <button
                 onClick={() => setShowFullDescription(!showFullDescription)}
-                className="bg-red-300 text-blue-400 hover:underline"
+                className="text-blue-400 hover:underline"
                 >
                 {showFullDescription ? 'Show less' : 'Read more'}
                 </button>

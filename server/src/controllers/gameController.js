@@ -27,7 +27,7 @@ const getAllGames = async (req, res) => {
       },
       gameImages: game.gameimage, // Assuming gameimage is already an array
     }));
-
+   
     res.status(200).json(transformedGames);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch games' });
