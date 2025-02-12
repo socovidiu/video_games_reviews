@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchGames, FetchGameData } from '../services/api';
 import GameCard from '../components/GameCard';
+import GameFilterSidebar from '../components/GameFilterSidebar';
 import { useLocation } from 'react-router-dom';
 
 const HomePage: React.FC = () => {
@@ -57,52 +58,43 @@ const HomePage: React.FC = () => {
 
   if (loading) return <p>Loading games...</p>;
   if (error) return <p>{error}</p>;
-  if (!sortedGames.length) return <p>No games found for "{searchQuery}" in "{genre || 'All Genres'}"</p>;
-
+  
   return (
-    <div className="container mx-auto px-4">
-      <h1 className="text-3xl font-bold my-4">Games List</h1>
+    <div className="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-6">
 
-      {/* Sorting Dropdown */}
-      <div className="mb-4 text-left">
-        <label className="mr-2 font-semibold">Sort by:</label>
-        <select
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value)}
-          className="p-2 border rounded"
-        >
-          <option value="title">Title (A-Z)</option>
-          <option value="rating">Rating (Highest First)</option>
-          <option value="released">Release Date (Newest First)</option>
-        </select>
-      </div>
+      {/* Left Sidebar */}
+      <GameFilterSidebar genre={genre} setGenre={setGenre} sortOrder={sortOrder} setSortOrder={setSortOrder} />
 
-      {/* Genre Filter Dropdown */}
-      <div className="mb-4 text-left">
-        <label className="mr-2 font-semibold">Filter by Genre:</label>
-        <select
-          value={genre}
-          onChange={(e) => setGenre(e.target.value)}
-          className="p-2 border rounded-lg w-full"
-        >
-          <option value="">All Genres</option>
-          <option value="Action">Action</option>
-          <option value="RPG">RPG</option>
-          <option value="Shooter">Shooter</option>
-          <option value="Strategy">Strategy</option>
-          <option value="Adventure">Adventure</option>
-        </select>
-      </div>
+      {/* Right Content */}
+      <div className="flex-1">
+        <h1 className="text-4xl font-bold text-gray-800 mb-6">🎮 Video Game List</h1>
 
-      {/* Display Filtered and Sorted Games */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {sortedGames.map((game) =>
-          game.gameData && game.gameImages ? (
-            <GameCard key={game.gameData.id} gameData={game.gameData} gameImages={game.gameImages} />
-          ) : (
-            <div key={Math.random()} className="text-gray-500">Invalid game data</div>
+       {/* Game Cards Grid */}
+       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+       {sortedGames.length > 0 ? (
+          sortedGames.map((game) =>
+            game.gameData && game.gameImages ? (
+              <GameCard
+                key={game.gameData.id}
+                gameData={game.gameData}
+                gameImages={game.gameImages}
+              />
+            ) : (
+              <div key={Math.random()} className="text-gray-500">Invalid game data</div>
+            )
           )
-        )}
+          ) : (
+            // No games found message, but filters stay visible
+            <div className="col-span-full text-center text-gray-600 text-lg p-4">
+              <p>
+                No games found
+                {searchQuery ? ` matching "${searchQuery}"` : ""} 
+                {genre ? ` in "${genre}" genre` : " in All Genres"}.
+              </p>
+              <p>Try adjusting your search or filter settings.</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

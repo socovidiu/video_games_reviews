@@ -67,6 +67,7 @@ const Navbar: React.FC = () => {
     const handleClearSearch = () => {
         setSearchQuery("");  // Clear input field
         setFilteredGames([]);  // Clear suggestions
+        navigate("/")
     };
 
     return (
@@ -91,15 +92,15 @@ const Navbar: React.FC = () => {
                         className="p-2 rounded-l-md border border-gray-700 bg-gray-900 text-white focus:outline-none w-3xl"
                     />
                     {/* Show clear button only if searchQuery is not empty */}
-                    {searchQuery && (
-                        <button
-                            type="button"
-                            onClick={handleClearSearch}
-                            className="ml-2 p-2 rounded"
-                        >
-                            🔍
-                        </button>
-                    )}
+                    
+                    <button
+                        type="button"
+                        onClick={handleClearSearch}
+                        className="ml-2 p-2 rounded"
+                    >
+                        🔍
+                    </button>
+                    
                     {filteredGames.length > 0 && (
                     <ul className="absolute bg-white text-black w-full mt-1 border rounded shadow-lg max-h-40 overflow-y-auto">
                         {filteredGames.map(game => (
