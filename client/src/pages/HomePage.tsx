@@ -4,19 +4,17 @@ import GameCard from '../components/GameCard';
 import { useLocation } from 'react-router-dom';
 
 const HomePage: React.FC = () => {
-
   const [games, setGames] = useState<FetchGameData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Search and sorting states
+  const [genre, setGenre] = useState<string>('');
   const [sortOrder, setSortOrder] = useState<string>('title'); 
 
   useEffect(() => {
     const loadGames = async () => {
       try {
         const data = await fetchGames();
-        console.log('Fetched games:', data); // Debug the structure
         if (data && Array.isArray(data)) {
           setGames(data);
         }
@@ -29,24 +27,19 @@ const HomePage: React.FC = () => {
     loadGames();
   }, []);
 
-  useEffect(() => {
-    console.log("Fetched games (Type Check):", typeof games);
-    console.log("Is games an array?", Array.isArray(games));
-    console.table(games);
-  }, [games]);
-
   // Extract search query from the URL
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const searchQuery = queryParams.get("search")?.toLowerCase() || '';
+  const searchQuery = queryParams.get('search')?.toLowerCase() || '';
 
-  // Filter games based on search query
-  const filteredGames = games.filter(game =>
-      game.gameData?.title.toLowerCase().includes(searchQuery)
-  );
+  // **🔹 Apply Combined Filters: Genre + Search Query**
+  const filteredGames = games
+    .filter(game => 
+      (!genre || game.gameData?.genre.toLowerCase().includes(genre.toLowerCase())) &&  // Genre filter
+      (!searchQuery || game.gameData?.title.toLowerCase().includes(searchQuery))  // Search filter
+    );
 
-
-  //  Sort the filtered list
+  // **🔹 Apply Sorting**
   const sortedGames = [...filteredGames].sort((a, b) => {
     if (!a.gameData || !b.gameData) return 0;
 
@@ -62,21 +55,13 @@ const HomePage: React.FC = () => {
     }
   });
 
- 
-
   if (loading) return <p>Loading games...</p>;
   if (error) return <p>{error}</p>;
-  if (!games || !games?.length){
-    return <p>No games available.</p>;
-  } 
-  if (!sortedGames.length) return <p>No games found for "{searchQuery}"</p>;
-
-  
+  if (!sortedGames.length) return <p>No games found for "{searchQuery}" in "{genre || 'All Genres'}"</p>;
 
   return (
-    
-    <div className="container ">
-      <h1 className="text-3xl font-bold my-4">Video Game Reviews</h1>
+    <div className="container mx-auto px-4">
+      <h1 className="text-3xl font-bold my-4">Games List</h1>
 
       {/* Sorting Dropdown */}
       <div className="mb-4 text-left">
@@ -91,19 +76,33 @@ const HomePage: React.FC = () => {
           <option value="released">Release Date (Newest First)</option>
         </select>
       </div>
-      
 
+      {/* Genre Filter Dropdown */}
+      <div className="mb-4 text-left">
+        <label className="mr-2 font-semibold">Filter by Genre:</label>
+        <select
+          value={genre}
+          onChange={(e) => setGenre(e.target.value)}
+          className="p-2 border rounded-lg w-full"
+        >
+          <option value="">All Genres</option>
+          <option value="Action">Action</option>
+          <option value="RPG">RPG</option>
+          <option value="Shooter">Shooter</option>
+          <option value="Strategy">Strategy</option>
+          <option value="Adventure">Adventure</option>
+        </select>
+      </div>
+
+      {/* Display Filtered and Sorted Games */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {sortedGames.map((game) => (
-           game.gameData && game.gameImages ? (
-          <GameCard 
-           key={game.gameData.id}
-           gameData={game.gameData}
-           gameImages={game.gameImages} />
+        {sortedGames.map((game) =>
+          game.gameData && game.gameImages ? (
+            <GameCard key={game.gameData.id} gameData={game.gameData} gameImages={game.gameImages} />
           ) : (
             <div key={Math.random()} className="text-gray-500">Invalid game data</div>
           )
-        ))}
+        )}
       </div>
     </div>
   );

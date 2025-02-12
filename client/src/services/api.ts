@@ -69,13 +69,24 @@ export const deleteReview = async (gameId: string | number, reviewId: string | n
 };
 
 
-// export const fetchUpdatedReviews = async (gameId:  string | number): Promise<ReviewData> => {
+// delete reviews that user added
+export const updateReview = async (gameId: string | number, reviewId: string | number,  comment: string, rating: number) => {
+  const token = localStorage.getItem('token');
 
-//   // try {
-//     const response = await axios.get(`${API_BASE_URL}/games/${gameId}/reviews`,);
-//     const data = await response.data;
-//     return data;
-//   // } catch (error) {
-//   //   console.error('Error fetching reviews:', error);
-//   // }
-// };
+  console.log("Token being sent:", token); // Log the token
+
+  if (!token) {
+    throw new Error('User not authenticated');
+  }
+
+  const response = await axios.put(`${API_BASE_URL}/games/${gameId}/reviews/${reviewId}`,
+    { comment, rating }, 
+    {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    withCredentials: true,
+  });
+
+  return response.data;
+};

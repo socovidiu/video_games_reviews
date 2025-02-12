@@ -73,6 +73,12 @@ const GameDetailsPage: React.FC = () => {
         setReviews((prevReviews) => prevReviews.filter((r) => r.id !== reviewId));
     };
 
+    const handleUpdateReview = (updatedReview: ReviewData) => {
+        setReviews((prevReviews) =>
+            prevReviews.map((review) => (review.id === updatedReview.id ? updatedReview : review))
+        );
+    };
+
     if (loading) {
     return <div className="text-center text-lg">Loading game details...</div>;
     }
@@ -136,6 +142,7 @@ const GameDetailsPage: React.FC = () => {
                     review={review}
                     gameId={gameData.id}
                     onDeleteReview={handleReviewDeleted}
+                    onUpdateReview={handleUpdateReview} 
                     />
                 ))}
             </div>

@@ -72,8 +72,5 @@ h3, h4, h5, h6, p {
   color: red;
 }
 
-Rather than making a massive change to your code. Simply give the div the background-color attribute and clear the floating elements with clear:both; on a break or any element to make it recognize the elements.
-
-Here is a working JSFiddle: http://jsfiddle.net/fLj5qvc7/
 
 

@@ -88,14 +88,14 @@ const Navbar: React.FC = () => {
                         placeholder="Search games..."
                         value={searchQuery}
                         onChange={handleSearchChange}
-                        className="p-2 rounded-l-md border border-gray-700 bg-gray-900 text-white focus:outline-none"
+                        className="p-2 rounded-l-md border border-gray-700 bg-gray-900 text-white focus:outline-none w-3xl"
                     />
                     {/* Show clear button only if searchQuery is not empty */}
                     {searchQuery && (
                         <button
                             type="button"
                             onClick={handleClearSearch}
-                            className="ml-2 p-2 bg-red-500 rounded"
+                            className="ml-2 p-2 rounded"
                         >
                             🔍
                         </button>

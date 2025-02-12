@@ -23,7 +23,11 @@ const getAllGames = async (req, res) => {
         slug: game.slug,
         genre: game.genre,
         rating: game.rating,
-        released: game.released,
+        released: game.released
+          ? new Date(game.released).toLocaleDateString('en-US', {
+            month: 'short', day: '2-digit', year: 'numeric'
+          })
+          : null,
       },
       gameImages: game.gameimage, // Assuming gameimage is already an array
     }));
@@ -115,7 +119,11 @@ const getGameDetails = async (req, res) => {
         slug: game.slug,
         genre: game.genre,
         rating: game.rating,
-        released: game.released,
+        released: game.released
+          ? new Date(game.released).toLocaleDateString('en-US', {
+            month: 'short', day: '2-digit', year: 'numeric'
+          })
+          : null,
       },
       gameDetails: game.gamedetals,
       gameReviews: game.reviews,   //Assuming reviews is already an array
