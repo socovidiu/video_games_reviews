@@ -1,74 +1,73 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { UserData } from "../types/User"
 
 const Dashboard: React.FC = () => {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
-  const [userData, setUserData] = useState<UserData | null>(null);
-  const [error, setError] = useState<string | null>(null);
+    const {user, logout } = useAuth();
+    const navigate = useNavigate();
+    const [error, setError] = useState<string | null>(null);
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchUserData = async () => {
-        const token = localStorage.getItem("token");
-        console.log(token);
-
-        if (!token) {
-            console.error("No token found");
-            logout();
-            navigate("/login");
-            return;
-        }
-
-        try {
-        const response = await axios.get("http://localhost:3000/api/auth/me", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-        });
-        
-        if (isMounted) {
-            setUserData(response.data.user);
-        }
-        } catch (err) {
-            console.error("Error fetching user data:", err);
-            if (isMounted) {
-                setError("Failed to fetch user data.");
-            }
-        }
-    };
-
-    fetchUserData();
-
-    return () => {
-        isMounted = false; // Cleanup
-    };
-    }, [logout, navigate]);
-
+    
+    // Handle Logout with Confirmation
     const handleLogout = () => {
-        logout();
+        const confirmLogout = window.confirm("Are you sure you want to log out?");
+        if (confirmLogout) {
+            setIsLoggingOut(true);
+            logout();
+        }
     };
 
     if (error) {
         return <p style={{ color: "red" }}>{error}</p>;
     }
 
-    if (!userData) {
-        return <p>Loading user data...</p>;
+    if (!user) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+              <p className="text-lg text-gray-700 animate-pulse">Loading user data...</p>
+            </div>
+        );
     }
 
     return (
-        <div className= "container mx-auto p-4">
-            <h1>Welcome, {userData.username}</h1>
-            <p>Email: {userData.email}</p>
-            <p>Role: {userData.role}</p>
-            <button onClick={handleLogout}>Logout</button>
+        <div className="container mx-auto p-6 max-w-md bg-white shadow-lg rounded-lg">
+        {/* Profile Picture */}
+        <div className="flex flex-col items-center">
+          <img
+            src={user.profilePicture || "https://via.placeholder.com/100"} 
+            alt="Profile"
+            className="w-24 h-24 rounded-full border border-gray-300 shadow-sm"
+          />
+          <h1 className="text-2xl font-semibold mt-3">{user.username}</h1>
+          <p className="text-gray-500">{user.email}</p>
         </div>
+  
+        {/* Bio Section */}
+        <div className="mt-4 px-4 text-center">
+          <h2 className="text-lg font-semibold">Bio</h2>
+          <p className="text-gray-600">{user.bio || "No bio available."}</p>
+        </div>
+  
+        {/* Actions */}
+        <div className="mt-6 flex flex-col items-center">
+          <button
+            onClick={() => navigate("/settings")}
+            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
+          >
+            Edit Profile
+          </button>
+          <button
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+            className={`w-full mt-2 py-2 rounded-md transition ${
+              isLoggingOut ? " cursor-not-allowed" : "bg-red-500 hover:bg-red-600"
+            } text-white`}
+          >
+            {isLoggingOut ? "Logging out..." : "Logout"}
+          </button>
+        </div>
+      </div>
     );
 };
 

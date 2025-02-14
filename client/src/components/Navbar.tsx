@@ -5,13 +5,15 @@ import { useNavigate } from "react-router-dom";
 import { fetchGames, FetchGameData } from '../services/api';
 
 
+
 const Navbar: React.FC = () => {
 
-    const  {logout } = useAuth();
+    const  {user, logout, isAuthenticated} = useAuth();
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
     const [games, setGames] = useState<FetchGameData[]>([]);
     const [filteredGames, setFilteredGames] = useState<FetchGameData[]>([]);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     useEffect(() => {
         const loadGames = async () => {
@@ -26,11 +28,6 @@ const Navbar: React.FC = () => {
         };
         loadGames();
     }, []);
-
-
-    const handleLogout = () => {
-        logout();
-    };
 
     // Handle search input change
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,6 +67,7 @@ const Navbar: React.FC = () => {
         navigate("/")
     };
 
+   
     return (
         <div className="fixed inset-x-0 top-0 z-10 border-b border-gray-950/5 dark:border-white/10">
         <nav className=" bg-gray-800 text-white p-4 ">
@@ -78,7 +76,7 @@ const Navbar: React.FC = () => {
                 <ul className="flex space-x-4">
                     <li>
                     <Link to="/" className="hover:text-gray-300">
-                        Games
+                    🎮 GameHub
                     </Link>     
                     </li>
                 </ul>
@@ -115,29 +113,60 @@ const Navbar: React.FC = () => {
                     </ul>
                     )}
                 </form>
-                {/* Right-side navigation */}
-                <ul className="flex space-x-4">
-                    <li>
-                    <Link to="/login" className="hover:text-gray-300">
-                        Login
-                    </Link>
-                    </li>
-                    <li>
-                    <Link to="/dashboard" className="hover:text-gray-300">
-                        Dashboard
-                    </Link>
-                    </li>
-                    <li>
-                    <Link to="/" className="hover:text-gray-300"
-                        onClick={handleLogout}>
-                        Logout
-                    </Link>
-                    </li>
-                </ul>
+                
+                {/* Right: Authentication */}
+                <div>
+                    {isAuthenticated && user ? (
+                        <div
+                            className="relative flex items-center cursor-pointer"
+                            onMouseEnter={() => setIsDropdownOpen(true)}
+                            onMouseLeave={() => setIsDropdownOpen(false)}
+                        >
+                            {/* Profile Image */}
+                            <img
+                                src={user.profilePicture}
+                                alt="Profile"
+                                className="w-10 h-10 rounded-full border border-gray-500"
+                            />
+                            <span className="ml-2 font-semibold">{user.username}</span>
+
+                            {/* Dropdown Menu */}
+                            {isDropdownOpen && (
+                                <div className="absolute right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-lg overflow-hidden z-50 ">
+                                    <div className="p-4 border-b">
+                                        <div className="flex items-center space-x-3">
+                                            <img src={user.profilePicture} alt="Profile" className="w-12 h-12 rounded-full border" />
+                                            <div>
+                                                <p className="font-semibold">{user.username}</p>
+                                                <p className="text-sm text-gray-500">{user.email}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ul className="py-2">
+                                        <li><Link to="/dashboard" className="block px-4 py-2 hover:bg-gray-200">Dashboard</Link></li>
+                                        <li><Link to="/settings" className="block px-4 py-2 hover:bg-gray-200">Settings</Link></li>
+                                        <li>
+                                            <button
+                                                onClick={logout}
+                                                className="w-full  px-4 py-2 hover:bg-red-500 hover:text-white"
+                                            >
+                                                Logout
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <Link to="/login" className="bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-700">
+                            Login
+                        </Link>
+                    )}
+                </div>
             </div>
         </nav>
-        </div>
-    );
+    </div>
+  );
 };
 
 export default Navbar;

@@ -87,6 +87,6 @@ export const updateReview = async (gameId: string | number, reviewId: string | n
     },
     withCredentials: true,
   });
-
+  console.log(response.data);
   return response.data;
 };

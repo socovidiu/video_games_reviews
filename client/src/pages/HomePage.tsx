@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchGames, FetchGameData } from '../services/api';
 import GameCard from '../components/GameCard';
-import GameFilterSidebar from '../components/GameFilterSidebar';
+import GameFilterSidebar from '../components/FilterSidebar';
 import { useLocation } from 'react-router-dom';
 
 const HomePage: React.FC = () => {
@@ -11,6 +11,9 @@ const HomePage: React.FC = () => {
 
   const [genre, setGenre] = useState<string>('');
   const [sortOrder, setSortOrder] = useState<string>('title'); 
+  const [minRating, setMinRating] = useState<number>(0);
+  const [maxRating, setMaxRating] = useState<number>(5);
+  const [releaseYear, setReleaseYear] = useState<string>("");
 
   useEffect(() => {
     const loadGames = async () => {
@@ -33,12 +36,19 @@ const HomePage: React.FC = () => {
   const queryParams = new URLSearchParams(location.search);
   const searchQuery = queryParams.get('search')?.toLowerCase() || '';
 
-  // **🔹 Apply Combined Filters: Genre + Search Query**
-  const filteredGames = games
-    .filter(game => 
-      (!genre || game.gameData?.genre.toLowerCase().includes(genre.toLowerCase())) &&  // Genre filter
-      (!searchQuery || game.gameData?.title.toLowerCase().includes(searchQuery))  // Search filter
-    );
+  // **🔹 Apply Filters: Genre + Search Query + Rating + Release Year**
+  const filteredGames = games.filter(game => {
+    const matchesGenre = !genre || game.gameData?.genre.toLowerCase().includes(genre.toLowerCase());
+    const matchesSearch = !searchQuery || game.gameData?.title.toLowerCase().includes(searchQuery);
+    const matchesRating = 
+      (game.gameData.rating || 0) >= minRating &&
+      (game.gameData.rating || 0) <= maxRating;
+    const matchesReleaseYear = 
+      !releaseYear || 
+      (game.gameData.released && new Date(game.gameData.released).getFullYear().toString() === releaseYear);
+
+    return matchesGenre && matchesSearch && matchesRating && matchesReleaseYear;
+  });
 
   // **🔹 Apply Sorting**
   const sortedGames = [...filteredGames].sort((a, b) => {
@@ -63,7 +73,18 @@ const HomePage: React.FC = () => {
     <div className="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-6">
 
       {/* Left Sidebar */}
-      <GameFilterSidebar genre={genre} setGenre={setGenre} sortOrder={sortOrder} setSortOrder={setSortOrder} />
+      <GameFilterSidebar 
+      genre={genre} 
+      setGenre={setGenre} 
+      sortOrder={sortOrder} 
+      setSortOrder={setSortOrder} 
+      minRating={minRating}
+      setMinRating={setMinRating}
+      maxRating={maxRating}
+      setMaxRating={setMaxRating}
+      releaseYear={releaseYear}
+      setReleaseYear={setReleaseYear}
+      />
 
       {/* Right Content */}
       <div className="flex-1">

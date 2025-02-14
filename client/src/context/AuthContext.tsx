@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import { AuthContextProps } from "../types/Authentication"
+import { UserData } from "../types/User"
 
 const API_BASE_URL = "http://localhost:3000/api/auth"; 
 
@@ -8,7 +9,7 @@ const API_BASE_URL = "http://localhost:3000/api/auth";
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<UserData | null>(null);
   const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
 
   // Update Axios default headers whenever token changes

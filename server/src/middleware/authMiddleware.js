@@ -1,5 +1,4 @@
 // To secure specific routes, create middleware to verify the JWT.
-
 const jwt = require('jsonwebtoken');
 const { isBlacklisted } = require("../utils/tokenBlacklist");
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
@@ -15,7 +14,6 @@ Functionality:
   Attaches the user data to the req object for further use.
 */
 
-
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
@@ -30,7 +28,13 @@ const authenticateToken = (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Attach user info to request object
+  
+    // Explicitly assign req.user to avoid "undefined" issues
+    req.user ={
+      id: decoded.Id,
+      username: decoded.username,
+      role: decoded.role,
+    };
     console.debug('The user data: ', req.user);
     next(); // Proceed to the next middleware
   } catch (err) {

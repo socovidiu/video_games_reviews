@@ -1,4 +1,4 @@
-import React from 'react';
+import {useState, useEffect} from 'react';
 import { ReviewData } from '../types/Reviews';
 import { deleteReview, updateReview }from '../services/api'
 import { getCurrentUserFromToken } from '../services/auth';
@@ -16,13 +16,19 @@ interface ReviewCardProps {
 const RevieweCard: React.FC<ReviewCardProps> = ({ review, gameId, onDeleteReview, onUpdateReview }) => {
 
   const currentUser = getCurrentUserFromToken();
-  const [userId, getUserId] = React.useState<number>();
+  const [userId, getUserId] = useState<number>();
 
 
   // State for edit mode
-  const [isEditing, setIsEditing] = React.useState(false);
-  const [updatedComment, setUpdatedComment] = React.useState(review.comment);
-  const [updatedRating, setUpdatedRating] = React.useState(review.rating);
+  const [isEditing, setIsEditing] = useState(false);
+  const [updatedComment, setUpdatedComment] = useState(review.comment);
+  const [updatedRating, setUpdatedRating] = useState(review.rating);
+
+
+  useEffect(() => {
+    setUpdatedComment(review.comment);
+    setUpdatedRating(review.rating);
+  }, [review]); // This re-syncs the state when the review prop changes
 
   const handleDelete = async () => {
     try {
@@ -92,7 +98,7 @@ const RevieweCard: React.FC<ReviewCardProps> = ({ review, gameId, onDeleteReview
             <button onClick={handleUpdate} 
               style={{backgroundColor: '#3333FF',}}//set background color as blue
               className="text-white px-4 py-1 rounded">
-              Save
+              Update
             </button>
             <button onClick={handleCancelEdit} className="bg-gray-300 px-4 py-1 rounded">
               Cancel

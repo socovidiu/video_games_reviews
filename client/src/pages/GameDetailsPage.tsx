@@ -75,7 +75,9 @@ const GameDetailsPage: React.FC = () => {
 
     const handleUpdateReview = (updatedReview: ReviewData) => {
         setReviews((prevReviews) =>
-            prevReviews.map((review) => (review.id === updatedReview.id ? updatedReview : review))
+            prevReviews.map((review) =>
+                 (review.id === updatedReview.id ? { ...review, ...updatedReview } : review)
+            )
         );
     };
 
