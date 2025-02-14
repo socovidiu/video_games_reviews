@@ -124,7 +124,7 @@ const Navbar: React.FC = () => {
                         >
                             {/* Profile Image */}
                             <img
-                                src={user.profilePicture}
+                                src="/Default_picture.jpg"
                                 alt="Profile"
                                 className="w-10 h-10 rounded-full border border-gray-500"
                             />
@@ -132,10 +132,10 @@ const Navbar: React.FC = () => {
 
                             {/* Dropdown Menu */}
                             {isDropdownOpen && (
-                                <div className="absolute right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-lg overflow-hidden z-50 ">
+                                <div className="relative right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-lg overflow-hidden z-50 ">
                                     <div className="p-4 border-b">
                                         <div className="flex items-center space-x-3">
-                                            <img src={user.profilePicture} alt="Profile" className="w-12 h-12 rounded-full border" />
+                                            <img src="/Default_picture.jpg" alt="Profile" className="w-12 h-12 rounded-full border" />
                                             <div>
                                                 <p className="font-semibold">{user.username}</p>
                                                 <p className="text-sm text-gray-500">{user.email}</p>
@@ -158,7 +158,7 @@ const Navbar: React.FC = () => {
                             )}
                         </div>
                     ) : (
-                        <Link to="/login" className="bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-700">
+                        <Link to="/login" className="bg-gray-600 px-4 py-2 rounded-lg hover:bg-gray-200 text-black">
                             Login
                         </Link>
                     )}

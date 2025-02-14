@@ -10,7 +10,7 @@ const {updateGameRating} = require('../utils/ratings');
 const addReview = async (req, res) => {
     const { gameId } = req.params;
     const { comment, rating } = req.body;
-    const userId = req.user.Id; // Assumes authenticateToken middleware sets req.user
+    const userId = req.user.id; // Assumes authenticateToken middleware sets req.user
     const username = req.user.username; // Assumes req.user contains the username
     
     if (!req.user) {
@@ -27,7 +27,7 @@ const addReview = async (req, res) => {
     if (isNaN(rating) || rating < 1 || rating > 5) {
         return res.status(400).json({ message: 'Rating must be between 1 and 5' });
     }
-
+    console.log(userId);
     try {
         
         // Check if the game exists

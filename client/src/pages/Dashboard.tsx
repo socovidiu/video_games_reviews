@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -7,6 +7,7 @@ const Dashboard: React.FC = () => {
     const navigate = useNavigate();
     const [error, setError] = useState<string | null>(null);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
+
 
     
     // Handle Logout with Confirmation
@@ -35,7 +36,7 @@ const Dashboard: React.FC = () => {
         {/* Profile Picture */}
         <div className="flex flex-col items-center">
           <img
-            src={user.profilePicture || "https://via.placeholder.com/100"} 
+            src= "/Default_picture.jpg" 
             alt="Profile"
             className="w-24 h-24 rounded-full border border-gray-300 shadow-sm"
           />

@@ -55,6 +55,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem("token", data.token);
     setToken(data.token);
     setUser(data.user);
+    console.log("this is the user data:", data.user);
     } catch (error){
       console.error("Login error:", error);
       throw error; // Optionally, surface this to display the error in your UI
@@ -73,9 +74,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error("Logout failed:", error);
     }
   };
+  
+  const signup = async (
+    username: string,
+    email: string,
+    password: string,
+    bio: string,
+    ) => {
+
+    try {
+      const { data } = await axios.post(`${API_BASE_URL}/signup`,
+      { 
+        username,
+        email,
+        password,
+        bio
+      });
+  
+      
+    } catch (error) {
+      console.error("Signup error:", error);
+      throw error; // Surface error for UI feedback
+    }
+  };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isAuthenticated: !!token }}>
+    <AuthContext.Provider value={{ user, token, login, logout, signup, isAuthenticated: !!token }}>
       {children}
     </AuthContext.Provider>
   );

@@ -25,7 +25,7 @@ const userSignup = async (req, res) => {
         }
         //store the encrypted password
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await User.create({ username, email, password: hashedPassword, bio, role });
+        const user = await User.create({ username, email, password: hashedPassword, bio });
 
         res.status(201).json({ message: 'User created successfully', user: { id: user.id, username: user.username, email: user.email } });
         } catch (error) {
@@ -114,9 +114,16 @@ const getAuthenticatedUser = async (req, res) => {
         if (!user) {
         return res.status(404).json({ message: 'User not found' });
         }
-
+        // data = {user:{ 
+        // username: user.username, 
+        // email: user.email,
+        // role: user.role,
+        // bio: user.bio,   
+        // }};
+        // // Send user data back
+        // res.status(200).json({ message: "User data:", data});
         // Send user data back
-        res.json({ user: { username: user.username, email: user.email, role: user.role } });
+        res.json({ user: { username: user.username, email: user.email, role: user.role, bio: user.bio } });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Failed to authenticate token.' });

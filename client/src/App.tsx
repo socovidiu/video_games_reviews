@@ -2,10 +2,11 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import GameDetailsPage from './pages/GameDetailsPage'; 
-import Login from "./pages/Login";
+import Login from "./pages/LoginPage";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
+import SignUp from "./pages/SignUpPage";
 import { AuthProvider } from "./context/AuthContext";
 import './App.css'
 
@@ -19,11 +20,12 @@ const App: React.FC = () => {
       <Router>
         <div className=" bg-gray-100 min-h-screen  pt-8 min-w-auto">
           <Navbar />
-          <div className="container mx-auto mt-8 min-h-screen ">
+          <div className="container mx-auto mt-8 min-h-auto ">
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/games/:id" element={<GameDetailsPage />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<SignUp />} />
               <Route path="/dashboard"
                 element={
                   <ProtectedRoute>

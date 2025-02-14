@@ -13,7 +13,7 @@ const GameDetailsPage: React.FC = () => {
     const gameId = id as string;
 
     // State to store game details
-    const [gameData, setGameata] = React.useState<GameData>();
+    const [gameData, setGameData] = React.useState<GameData>();
     const [gameDetails, setGameDetails] = React.useState<GameDetails>();
     const [gameImages, setGameImages] = React.useState<GameImage[]>([]);
     const [reviews, setReviews] = React.useState<ReviewData[]>([]);
@@ -42,7 +42,7 @@ const GameDetailsPage: React.FC = () => {
             try {
             const data = await fetchGameDetails(gameId);
 
-            setGameata(data.gameData);
+            setGameData(data.gameData);
             setGameDetails(data.gameDetails);
             setGameImages(data.gameImages);             
             setReviews(data.gameReviews);
@@ -58,7 +58,7 @@ const GameDetailsPage: React.FC = () => {
 
     // Ation to add new review
     const handleReviewAdded = (newReview: ReviewData) => {
-        // setReviews((prevReviews) => [...prevReviews, newReview]);
+        
         // Ensure no duplicate reviews by checking review IDs
         setReviews((prevReviews) => {
             if (!prevReviews.find((review) => review.id === newReview.id)) {
@@ -76,10 +76,26 @@ const GameDetailsPage: React.FC = () => {
     const handleUpdateReview = (updatedReview: ReviewData) => {
         setReviews((prevReviews) =>
             prevReviews.map((review) =>
-                 (review.id === updatedReview.id ? { ...review, ...updatedReview } : review)
+                review.id === updatedReview.id ? { ...review, ...updatedReview } : review
             )
         );
+    
+        // ✅ Recalculate average rating dynamically
+        const newReviews = reviews.map((review) =>
+            review.id === updatedReview.id ? { ...review, ...updatedReview } : review
+        );
+        const newAverageRating =
+            newReviews.reduce((sum, r) => sum + r.rating, 0) / newReviews.length;
+    
+        // ✅ Update game data with the new rating
+        setGameData((prevGameData) =>
+            prevGameData ? { ...prevGameData, rating: newAverageRating } : prevGameData
+        );
+    
+        console.log("Updated Reviews:", newReviews);
+        console.log("New Average Rating:", newAverageRating);
     };
+       
 
     if (loading) {
     return <div className="text-center text-lg">Loading game details...</div>;

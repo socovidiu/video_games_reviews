@@ -7,5 +7,6 @@ export interface AuthContextProps {
   token: string | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  signup: (username: string, email: string, password: string, bio: string) => void;
   isAuthenticated: boolean;
 }

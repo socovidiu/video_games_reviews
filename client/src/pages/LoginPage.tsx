@@ -54,6 +54,13 @@ const Login: React.FC = () => {
             className="w-full bg-blue-500 text-black py-2 rounded-md hover:bg-blue-600 transition"
           > Login</button>
         </form>
+        <div className="text-center mt-4">
+          <p className="text-gray-600">Don't have an account?</p>
+          <button
+            onClick={() => navigate("/signup")}
+            className="text-blue-500 hover:underline"
+          > Sign Up </button>
+        </div>
       </div>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>

@@ -2,9 +2,6 @@ import {useState, useEffect} from 'react';
 import { ReviewData } from '../types/Reviews';
 import { deleteReview, updateReview }from '../services/api'
 import { getCurrentUserFromToken } from '../services/auth';
-// interface ReviewCardProps {
-//     review: ReviewData;
-// }
 
 interface ReviewCardProps {
     review: ReviewData;
@@ -28,8 +25,8 @@ const RevieweCard: React.FC<ReviewCardProps> = ({ review, gameId, onDeleteReview
   useEffect(() => {
     setUpdatedComment(review.comment);
     setUpdatedRating(review.rating);
-  }, [review]); // This re-syncs the state when the review prop changes
-
+  }, [review]); // ✅ Ensure UI updates when review changes
+  
   const handleDelete = async () => {
     try {
       console.log(review);
