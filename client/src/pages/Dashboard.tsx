@@ -53,12 +53,14 @@ const Dashboard: React.FC = () => {
         {/* Actions */}
         <div className="mt-6 flex flex-col items-center">
           <button
+            style={{backgroundColor: '#3333FF', }}
             onClick={() => navigate("/settings")}
             className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
           >
             Edit Profile
           </button>
           <button
+            style={{backgroundColor: '#f2401a', }}
             onClick={handleLogout}
             disabled={isLoggingOut}
             className={`w-full mt-2 py-2 rounded-md transition ${
