@@ -9,11 +9,23 @@ const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [bio, setBiography] = useState("");
+  const [profilePicture, setProfilePicture] = useState<File | null>(null);
+
+  const DEFAULT_AVATAR = "/Default_picture.jpg";
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setProfilePicture(e.target.files[0]); // Store the file in state
+    }
+  };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await signup(username, email, password, bio);
+
+      if (!profilePicture) 
+         setProfilePicture(DEFAULT_AVATAR);
+
+      await signup(username, email, password, bio, profilePicture);
 
       await login(email, password); // Auto-login after signup
       navigate("/"); // Redirect to home after successful signup
@@ -55,6 +67,10 @@ const SignUp: React.FC = () => {
             value={bio}
             onChange={(e) => setBiography(e.target.value)}
           />
+
+           {/* Profile Picture Upload */}
+           <input type="file" accept="image/*" onChange={handleFileChange} className="mb-2"/>
+
           <button type="submit"
            style={{backgroundColor: '#008000',}}
            className="w-full text-white py-2 rounded">

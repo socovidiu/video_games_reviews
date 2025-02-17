@@ -75,31 +75,47 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
   
-  const signup = async (
-    username: string,
-    email: string,
-    password: string,
-    bio: string,
-    ) => {
-
+  const signup = async (username: string, email: string, password: string, bio: string, profilePicture: File) => {
     try {
-      const { data } = await axios.post(`${API_BASE_URL}/signup`,
-      { 
-        username,
-        email,
-        password,
-        bio
-      });
-  
-      
+        const formData = new FormData();
+        formData.append("username", username);
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("bio", bio);
+        formData.append("profilePicture", profilePicture);
+
+        const { data } = await axios.post(`${API_BASE_URL}/signup`, formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        setToken(data.token);
+        localStorage.setItem("token", data.token);
+        setUser(data.user);
+        console.log("User signed up:", data.user);
     } catch (error) {
-      console.error("Signup error:", error);
-      throw error; // Surface error for UI feedback
+        console.error("Signup error:", error);
+        throw error;
     }
-  };
+};
+
+const updateUser = async (updatedData: FormData) => {
+  try {
+      const response = await axios.put(`${API_BASE_URL}/update-profile`, updatedData, {
+          headers: {
+              Authorization: `Bearer ${token}`,
+          },
+      });
+
+      setUser(response.data.user);
+  } catch (error) {
+      console.error("Failed to update user:", error);
+      throw error;
+  }
+};
+
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, signup, isAuthenticated: !!token }}>
+    <AuthContext.Provider value={{ user, token, login, logout, signup, updateUser, isAuthenticated: !!token }}>
       {children}
     </AuthContext.Provider>
   );

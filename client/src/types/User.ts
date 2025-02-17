@@ -3,5 +3,5 @@ export interface UserData {
   email: string;
   role: string;
   bio: string;
-  // profilePicture: string;
+  profilePicture: File;
 }
