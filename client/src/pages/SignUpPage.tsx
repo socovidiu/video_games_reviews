@@ -5,30 +5,43 @@ import { useNavigate } from "react-router-dom";
 const SignUp: React.FC = () => {
   const { login, signup } = useAuth();
   const navigate = useNavigate();
+
+  // Form fields
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [bio, setBiography] = useState("");
-  const [profilePicture, setProfilePicture] = useState<File | null>(null);
+  const [bio, setBio] = useState("");
 
-  const DEFAULT_AVATAR = "/Default_picture.jpg";
+  // Profile picture state
+  const [profilePicture, setProfilePicture] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string>("/Default_picture.jpg");
+
+  // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setProfilePicture(e.target.files[0]); // Store the file in state
+      setProfilePicture(e.target.files[0]); // Store file for submission
+      setPreview(URL.createObjectURL(e.target.files[0])); // Show preview
     }
   };
 
+  // Handle form submission
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     try {
-
-      if (!profilePicture) 
-         setProfilePicture(DEFAULT_AVATAR);
-
-      await signup(username, email, password, bio, profilePicture);
-
+      // Create FormData to send files
+      const formData = new FormData();
+      formData.append("username", username);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("bio", bio);
+      if (profilePicture) {
+        formData.append("profilePicture", profilePicture); // Only append if a file is selected
+      }
+     
+      await signup(formData); // Send FormData to backend
       await login(email, password); // Auto-login after signup
-      navigate("/"); // Redirect to home after successful signup
+      navigate("/"); // Redirect to homepage
     } catch (error) {
       console.error("Signup failed:", error);
     }
@@ -45,6 +58,7 @@ const SignUp: React.FC = () => {
             className="w-full p-2 border border-gray-300 rounded mb-2"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
           />
           <input
             type="email"
@@ -52,6 +66,7 @@ const SignUp: React.FC = () => {
             className="w-full p-2 border border-gray-300 rounded mb-2"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
           <input
             type="password"
@@ -59,21 +74,27 @@ const SignUp: React.FC = () => {
             className="w-full p-2 border border-gray-300 rounded mb-2"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
-          <input
-            type="biography"
-            placeholder="biography"
+          <textarea
+            placeholder="Biography"
             className="w-full p-2 border border-gray-300 rounded mb-2"
             value={bio}
-            onChange={(e) => setBiography(e.target.value)}
-          />
+            onChange={(e) => setBio(e.target.value)}
+          ></textarea>
 
-           {/* Profile Picture Upload */}
-           <input type="file" accept="image/*" onChange={handleFileChange} className="mb-2"/>
+          {/* Profile Picture Upload */}
+          <div className="mb-2">
+            <label className="block text-sm font-medium text-gray-700">Profile Picture</label>
+            <img src={preview} alt="Profile Preview" className="w-20 h-20 rounded-full mt-2" />
+            <input type="file" accept="image/*" onChange={handleFileChange} className="mt-2" />
+          </div>
 
-          <button type="submit"
-           style={{backgroundColor: '#008000',}}
-           className="w-full text-white py-2 rounded">
+          <button
+            type="submit"
+            style={{ backgroundColor: "#008000" }}
+            className="w-full text-white py-2 rounded"
+          >
             Sign Up
           </button>
         </form>

@@ -76,7 +76,7 @@ const RevieweCard: React.FC<ReviewCardProps> = ({ review, gameId, onDeleteReview
           </span>
       </div>
       {/* Edit Mode */}
-      {isEditing ? (
+      {(isMine && isEditing) ? (
         <div className="flex flex-col gap-2">
           <textarea
             className="border rounded p-2 w-full"

@@ -33,5 +33,6 @@ app.use('/api/games', gameRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api', protectedRoutes);
 app.use('/api/games', reviewRoutes)
+app.use('/uploads', express.static("uploads"));
 
 module.exports = app;

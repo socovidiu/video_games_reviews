@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { UserData } from "../types/User"
 
 const Settings: React.FC = () => {
     const { user, updateUser } = useAuth();
@@ -47,7 +46,7 @@ const Settings: React.FC = () => {
             if (avatar) {
                 formDataToSend.append("profilePicture", avatar); // Only append if a new image is uploaded
             }
-    
+            console.log(formDataToSend);
             await updateUser(formDataToSend);
             setMessage("Profile updated successfully!");
         } catch (error) {

@@ -8,6 +8,9 @@ const Dashboard: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
 
+  // Ensure profilePicture is a string (handle File objects)
+  const profilePictureSrc = user?.profilePicture instanceof File
+  ? URL.createObjectURL(user.profilePicture): user?.profilePicture || "/Default_picture.jpg"; // Fallback image
 
     
     // Handle Logout with Confirmation
@@ -36,7 +39,7 @@ const Dashboard: React.FC = () => {
         {/* Profile Picture */}
         <div className="flex flex-col items-center">
           <img
-            src= "/Default_picture.jpg" 
+            src= {profilePictureSrc}
             alt="Profile"
             className="w-24 h-24 rounded-full border border-gray-300 shadow-sm"
           />

@@ -1,8 +1,9 @@
 const express = require('express');
-const { userSignup, userLogin, userLogout, getAuthenticatedUser } = require('../controllers/userController');
+const { userSignup, userLogin, userLogout, getAuthenticatedUser, updateUserProfile } = require('../controllers/userController');
 const { body }  = require('express-validator');
 const authenticateToken = require('../middleware/authMiddleware');
 const authorizeRoles= require('../middleware/rolesMiddleware');
+const upload = require("../middleware/upload"); 
 
 const router = express.Router();
 
@@ -13,6 +14,7 @@ router.post('/signup',
         body('email').isEmail().withMessage('Invalid email'),
         body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
     ],
+    upload.single("profilePicture"),
     userSignup
 );
   
@@ -36,6 +38,14 @@ router.get('/admin',authenticateToken, authorizeRoles('admin'), (req, res) => {
 
 // Protected route to get user details
 router.get("/me", authenticateToken, getAuthenticatedUser);
+
+// Update user profile
+router.put(
+    "/update-profile",
+    authenticateToken, // Ensures only logged-in users can update
+    upload.single("profilePicture"), // Handles profile picture upload
+    updateUserProfile
+);
 
 
 module.exports = router;

@@ -75,23 +75,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
   
-  const signup = async (username: string, email: string, password: string, bio: string, profilePicture: File) => {
+  const signup = async (formData: FormData) => {
     try {
-        const formData = new FormData();
-        formData.append("username", username);
-        formData.append("email", email);
-        formData.append("password", password);
-        formData.append("bio", bio);
-        formData.append("profilePicture", profilePicture);
+      for (let pair of formData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
 
-        const { data } = await axios.post(`${API_BASE_URL}/signup`, formData, {
-            headers: { "Content-Type": "multipart/form-data" },
-        });
-
-        setToken(data.token);
-        localStorage.setItem("token", data.token);
-        setUser(data.user);
-        console.log("User signed up:", data.user);
+      const { data } = await axios.post(`${API_BASE_URL}/signup`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+      });
+      
+      setToken(data.token);
+      localStorage.setItem("token", data.token);
+      setUser(data.user);
+      console.log("User signed up:", data.user);
     } catch (error) {
         console.error("Signup error:", error);
         throw error;
@@ -103,6 +100,7 @@ const updateUser = async (updatedData: FormData) => {
       const response = await axios.put(`${API_BASE_URL}/update-profile`, updatedData, {
           headers: {
               Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
           },
       });
 

@@ -12,6 +12,10 @@ const Navbar: React.FC = () => {
     const [filteredGames, setFilteredGames] = useState<FetchGameData[]>([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+    // Ensure profilePicture is a string (handle File objects)
+    const profilePictureSrc = user?.profilePicture instanceof File
+    ? URL.createObjectURL(user.profilePicture): user?.profilePicture || "/Default_picture.jpg"; // Fallback image
+
     useEffect(() => {
         const loadGames = async () => {
             try {
@@ -121,7 +125,7 @@ const Navbar: React.FC = () => {
                                     {/* Profile Image */}
                                     <div className="flex items-center space-x-2">
                                     <img
-                                        src="/Default_picture.jpg"
+                                        src={profilePictureSrc}
                                         alt="Profile"
                                         className="w-10 h-10 rounded-full border border-gray-500"
                                     />
@@ -132,7 +136,7 @@ const Navbar: React.FC = () => {
                                     <div className="absolute  mt-2 w-68 bg-white text-black shadow-lg rounded-lg overflow-hidden z-50 top-full">
                                         <div className="p-4 border-b">
                                             <div className="flex items-center space-x-3">
-                                                <img src="/Default_picture.jpg" alt="Profile" className="w-12 h-12 rounded-full border" />
+                                                <img src={profilePictureSrc} alt="Profile" className="w-12 h-12 rounded-full border" />
                                                 <div>
                                                     <p className="font-semibold text-left">{user.username}</p>
                                                     <p className="text-sm text-gray-500">{user.email}</p>

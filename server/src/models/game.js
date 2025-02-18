@@ -85,9 +85,11 @@ const User = sequelize.define('User', {
   }, // Default role is 'user'
   bio: {
     type: DataTypes.TEXT, // Optional user bio
+    allowNull: true,
   },
-  avatarUrl: {
+  profilePicture: {
     type: DataTypes.STRING, // Optional profile picture URL
+    allowNull: true,
   },
   createdAt: {
     type: DataTypes.DATE,
