@@ -1,0 +1,52 @@
+# Default values for vgb.
+namespace: vgb-ns
+
+frontend:
+  image: docker.io/soc1/vgb-frobtend:1.0.0
+  replicas: 1
+  port: 80
+  service:
+    type: LoadBalancer     
+    port: 80
+    nodePort: 30080
+  env: []  
+
+backend:
+  image: docker.io/soc1/vgb-api:1.0.0
+  replicas: 1
+  port: 8080
+  service:
+    type: ClusterIP
+    port: 8080
+  env:
+    - name: DB_HOST
+      value: database
+    - name: DB_PORT
+      value: "5432"
+    - name: DB_USER
+      valueFromSecret: db-user
+    - name: DB_PASSWORD
+      valueFromSecret: db-password
+    - name: DB_NAME
+      value: appdb
+
+database:
+  # use your own DB image or a stock one like postgres
+  image: postgres:16
+  port: 5432
+  storageSize: 5Gi
+  dataPath: /var/lib/postgresql/data
+  service:
+    type: ClusterIP         # DB should stay internal
+    port: 5432
+  env:
+    - name: POSTGRES_DB
+      value: appdb
+    - name: POSTGRES_USER
+      valueFromSecret: db-user
+    - name: POSTGRES_PASSWORD
+      valueFromSecret: db-password
+
+secrets:
+  dbUser: appuser
+  dbPassword: appsecret

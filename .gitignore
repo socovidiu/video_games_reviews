@@ -57,3 +57,5 @@ docs/
 uploads/
 
 *.sql
+
+k8s/values-secrets.yaml
