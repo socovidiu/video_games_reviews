@@ -1,14 +1,12 @@
-version: "3.8"
-
 services:
   server:
     build: ./server
+    image: soc1/vgb-api:${VERSION:-dev}
     ports:
       - "5000:5000"
     depends_on:
       db:
-         condition: service_healthy
-
+        condition: service_healthy
     env_file:
       - ./server/.env
     networks:
@@ -16,32 +14,31 @@ services:
 
   client:
     build: ./client
+    image: soc1/vgb-frobtend:${VERSION:-dev}
     ports:
       - "5173:80"
     networks:
       - app-network
-
   db:
-    image: postgres:15
+    image: postgres:15-alpine
     restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Infinit1
-      POSTGRES_DB: game_reviews
+    env_file:
+      - ./db/.env
     volumes:
-      - videogames_reviews_db-data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
+      - ./game_reviews.sql:/docker-entrypoint-initdb.d/game_reviews.sql
     ports:
       - "5432:5432"
     networks:
       - app-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 5s
       timeout: 5s
       retries: 5
 
 volumes:
-  db-data:
+  db_data:
 
 networks:
   app-network:
