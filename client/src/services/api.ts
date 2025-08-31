@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { GameData, GameDetails, GameImage } from '../types/Game';
 import { ReviewData } from '../types/Reviews';
-export const API_BASE_URL = 'http://localhost:3000/api';
+const baseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api';
 
 export interface FetchGameData {
   gameData: GameData;
@@ -17,7 +17,7 @@ export interface FetchGameDetailsData {
 
 //Get the games to list them in the homepage
 export const fetchGames = async (): Promise<FetchGameData[]> => {
-  const response = await axios.get<FetchGameData[]>(`${API_BASE_URL}/games`);
+  const response = await axios.get<FetchGameData[]>(`${baseUrl}/games`);
   const data = response.data;
   console.log("Raw API response:", data[0].gameData); // Check backend response
   return data;
@@ -26,7 +26,7 @@ export const fetchGames = async (): Promise<FetchGameData[]> => {
 // Get the etails of the specified game
 export const fetchGameDetails = async (id: string | number): Promise<FetchGameDetailsData> => {
  
-  const response = await axios.get<FetchGameDetailsData>(`${API_BASE_URL}/games/${id}`);
+  const response = await axios.get<FetchGameDetailsData>(`${baseUrl}/games/${id}`);
   // Log the response before parsing it
   console.debug('Raw response: ', response);
   return response.data;
@@ -37,7 +37,7 @@ export const addReview = async (gameId:  string | number, comment: string, ratin
 
   const token = localStorage.getItem('token'); // Assuming token storage in localStorage
 
-  const response = await axios.post(`${API_BASE_URL}/games/${gameId}/reviews`,
+  const response = await axios.post(`${baseUrl}/games/${gameId}/reviews`,
   { comment, rating },
   {
     headers: {
@@ -58,7 +58,7 @@ export const deleteReview = async (gameId: string | number, reviewId: string | n
     throw new Error('User not authenticated');
   }
 
-  const response = await axios.delete(`${API_BASE_URL}/games/${gameId}/reviews/${reviewId}`, {
+  const response = await axios.delete(`${baseUrl}/games/${gameId}/reviews/${reviewId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -79,7 +79,7 @@ export const updateReview = async (gameId: string | number, reviewId: string | n
     throw new Error('User not authenticated');
   }
 
-  const response = await axios.put(`${API_BASE_URL}/games/${gameId}/reviews/${reviewId}`,
+  const response = await axios.put(`${baseUrl}/games/${gameId}/reviews/${reviewId}`,
     { comment, rating }, 
     {
     headers: {

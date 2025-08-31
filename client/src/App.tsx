@@ -9,19 +9,14 @@ import Navbar from "./components/Navbar";
 import SignUp from "./pages/SignUpPage";
 import Settings from "./pages/Settings";
 import { AuthProvider } from "./context/AuthContext";
-import './App.css'
-
-
-
 
 const App: React.FC = () => {
 
   return (
     <AuthProvider>
       <Router>
-        <div className=" bg-gray-100 min-h-screen  pt-8 min-w-auto">
-          <Navbar />
-          <div className="container mx-auto mt-8 min-w-auto ">
+        <Navbar />
+          <div className=" bg-gray-100 min-h-auto  pt-8">
             <Routes>z``
               <Route path="/" element={<HomePage />} />
               <Route path="/games/:id" element={<GameDetailsPage />} />
@@ -37,7 +32,6 @@ const App: React.FC = () => {
               />
             </Routes>
           </div>
-        </div>
       </Router>
     </AuthProvider>
   );

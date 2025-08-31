@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import Button from '../components/UI_Elements/Button'
 
 const SignUp: React.FC = () => {
   const { login, signup } = useAuth();
@@ -90,19 +91,21 @@ const SignUp: React.FC = () => {
             <input type="file" accept="image/*" onChange={handleFileChange} className="mt-2" />
           </div>
 
-          <button
+          <Button
             type="submit"
-            style={{ backgroundColor: "#008000" }}
-            className="w-full text-white py-2 rounded"
+            className="w-full text-white bg-green-600 hover:bg-green-700"
           >
             Sign Up
-          </button>
+          </Button>
         </form>
         <div className="text-center mt-4">
           <p className="text-gray-600">Already have an account?</p>
-          <button onClick={() => navigate("/login")} className="text-blue-500 hover:underline">
+          <Button 
+            onClick={() => navigate("/login")} 
+            className="text-blue-500 hover:underline"
+          >
             Login
-          </button>
+          </Button>
         </div>
       </div>
     </div>

@@ -7,13 +7,18 @@ const reviewRoutes = require('./routes/reviewsRoutes')
 const sequelize = require('./config/db');
 
 const { Game, GameDetails, GameImage, GameReview, User } = require('./models/game');
+const allowedOrigins = [
+  "http://localhost:5173", // Vite dev
+  "http://localhost:3000", // Docker frontend
+  "http://client:3000"     // Docker Compose internal network
+];
 
 
 // Define the Express App
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:5173", // Frontend origin
+  origin: allowedOrigins, // Frontend origin
   credentials: true, // Allow credentials
 }));
 

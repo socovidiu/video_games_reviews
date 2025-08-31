@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import Button from '../components/UI_Elements/Button'
+
 
 const Login: React.FC = () => {
   const { login } = useAuth();
@@ -49,17 +51,18 @@ const Login: React.FC = () => {
               className="w-full px-3 py-2 border rounded-md focus:ring focus:ring-blue-200"
             />
           </div>
-          <button 
+          <Button 
             type="submit"
-            className="w-full bg-blue-500 text-black py-2 rounded-md hover:bg-blue-600 transition"
-          > Login</button>
+            className="w-full text-white bg-blue-500 hover:bg-blue-600 transition"
+          > Login</Button>
         </form>
         <div className="text-center mt-4">
           <p className="text-gray-600">Don't have an account?</p>
-          <button
+          <Button
             onClick={() => navigate("/signup")}
             className="text-blue-500 hover:underline"
-          > Sign Up </button>
+          > Sign Up 
+          </Button>
         </div>
       </div>
       {error && <p style={{ color: "red" }}>{error}</p>}

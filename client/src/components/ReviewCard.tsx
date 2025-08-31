@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react';
 import { ReviewData } from '../types/Reviews';
 import { deleteReview, updateReview }from '../services/api'
 import { getCurrentUserFromToken } from '../services/auth';
+import Button from './UI_Elements/Button'
 
 interface ReviewCardProps {
     review: ReviewData;
@@ -92,14 +93,16 @@ const RevieweCard: React.FC<ReviewCardProps> = ({ review, gameId, onDeleteReview
             onChange={(e) => setUpdatedRating(Number(e.target.value))}
           />
           <div className="flex justify-end gap-2 mt-2">
-            <button onClick={handleUpdate} 
-              style={{backgroundColor: '#3333FF',}}//set background color as blue
-              className="text-white px-4 py-1 rounded">
+            <Button 
+              onClick={handleUpdate} 
+              className="text-white bg-blue-500 hover:bg-blue-400">
               Update
-            </button>
-            <button onClick={handleCancelEdit} className="bg-gray-300 px-4 py-1 rounded">
+            </Button>
+            <Button 
+              onClick={handleCancelEdit} 
+              className="bg-gray-300 hover:bg-gray-400">
               Cancel
-            </button>
+            </Button>
           </div>
         </div>
       ) : (
@@ -108,26 +111,24 @@ const RevieweCard: React.FC<ReviewCardProps> = ({ review, gameId, onDeleteReview
 
       {/* Delete button shown conditionally if the review belongs to the logged-in user */}
       {isMine && (
-        <div className="text-right" >
-        <button 
-          onClick={handleEdit} 
-          className=" text-gray-600 font-bold py-1 px-3 rounded-lg mt-4"
-          style={{backgroundColor: '#D3D3D3',}}//set background color as grey
-        >             
-          Edit ✎
-        </button>  
-        <button 
-          onClick={handleDelete} 
-          className=" text-white font-bold py-1 px-3 rounded-lg mt-4"
-          style={{backgroundColor: '#f2401a',}}//set background color as red
-        >             
-          Delete
-        </button>
+        <div className="flex justify-end gap-2 mt-2" >
+          <Button 
+            onClick={handleEdit} 
+            className=" text-gray-600 bg-gray-300 hover:bg-gray-400 mt-4"
+          >             
+            Edit ✎
+          </Button>  
+          <Button 
+            onClick={handleDelete} 
+            className=" text-white  bg-red-500 hover:bg-red-600 mt-4"
+          >             
+            Delete
+          </Button>
         
         </div>
       )}
       </div>
-      </div>
+    </div>
   );
 };
 

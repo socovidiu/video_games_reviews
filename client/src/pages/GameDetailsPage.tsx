@@ -5,6 +5,7 @@ import ReviewCard from '../components/ReviewCard';
 import { ReviewData } from '../types/Reviews';
 import { GameData, GameDetails, GameImage } from "../types/Game";
 import AddReviewForm from '../components/AddReviewForm';
+import Button from '../components/UI_Elements/Button'
 
 
 
@@ -122,15 +123,15 @@ const GameDetailsPage: React.FC = () => {
             <div>
                 {/* Description Section */}
                 <h2 className="text-xl font-semibold mb-2 text-left">Description</h2>
-                <p className={`mb-4 ${!showFullDescription ? 'line-clamp-3' : ''}`}>
+                <p className={`mb-4 text-left ${!showFullDescription ? 'line-clamp-3' : ''}`}>
                 {   description}
                 </p>
-                <button
-                onClick={() => setShowFullDescription(!showFullDescription)}
-                className="text-blue-400 hover:underline"
+                <Button
+                    onClick={() => setShowFullDescription(!showFullDescription)}
+                    className="text-blue-400 hover:underline"
                 >
                 {showFullDescription ? 'Show less' : 'Read more'}
-                </button>
+                </Button>
             </div>
             {/* Game details */}
             <div className="grid grid-cols-2 gap-4 mt-6">
@@ -156,11 +157,11 @@ const GameDetailsPage: React.FC = () => {
             <div className="mt-4">
                 {uniqueReviews.map((review: ReviewData) => (
                     <ReviewCard 
-                    key={review.id}
-                    review={review}
-                    gameId={gameData.id}
-                    onDeleteReview={handleReviewDeleted}
-                    onUpdateReview={handleUpdateReview} 
+                        key={review.id}
+                        review={review}
+                        gameId={gameData.id}
+                        onDeleteReview={handleReviewDeleted}
+                        onUpdateReview={handleUpdateReview} 
                     />
                 ))}
             </div>

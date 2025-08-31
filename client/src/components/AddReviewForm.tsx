@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { addReview } from '../services/api';
 import { ReviewData } from '../types/Reviews'
+import Button from './UI_Elements/Button'
 
 interface AddReviewFormProps {
   gameId: number;
@@ -54,9 +55,9 @@ const AddReviewForm: React.FC<AddReviewFormProps> = ({ gameId, onReviewAdded }) 
         className="w-full border p-2 mb-2 rounded-lg"
         placeholder="Rating (1 to 5)"
       />
-      <button type="submit" className="bg-blue-500 text-grey px-4 py-2 rounded-lg">
+      <Button type="submit" className="bg-blue-500 text-white hover:bg-blue-400">
         Submit Review
-      </button>
+      </Button>
     </form>
   );
 };

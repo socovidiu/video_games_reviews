@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import Button from '../components/UI_Elements/Button'
+
 
 const Settings: React.FC = () => {
     const { user, updateUser } = useAuth();
@@ -107,14 +109,13 @@ const Settings: React.FC = () => {
                 </div>
 
                 {/* Submit Button */}
-                <button
+                <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 disabled:opacity-50"
-                    style={{backgroundColor: '#3333FF',}}
+                    className="w-full bg-blue-500 text-white  hover:bg-blue-600"
                 >
                     {loading ? "Updating..." : "Save Changes"}
-                </button>
+                </Button>
 
                 {/* Success/Error Message */}
                 {message && <p className="text-center text-sm mt-2">{message}</p>}

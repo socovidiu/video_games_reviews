@@ -3,7 +3,8 @@ import axios from "axios";
 import { AuthContextProps } from "../types/Authentication"
 import { UserData } from "../types/User"
 
-const API_BASE_URL = "http://localhost:3000/api/auth"; 
+const baseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api';
+
 
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -32,7 +33,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/me`, {
+        const response = await axios.get(`${baseUrl}/auth/me`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`, 
           },
@@ -50,7 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string) => {
     try {
-    const { data } = await axios.post(`${API_BASE_URL}/login`, { email, password });
+    const { data } = await axios.post(`${baseUrl}/auth/login`, { email, password });
     // save the token
     localStorage.setItem("token", data.token);
     setToken(data.token);
@@ -65,7 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = async () => {
     // remove the token
     try {
-      await axios.post(`${API_BASE_URL}/logout`, {}, { withCredentials: true });
+      await axios.post(`${baseUrl}/auth/logout`, {}, { withCredentials: true });
       localStorage.removeItem("token"); // Clear token
       setUser(null);
       setToken(null);
@@ -81,7 +82,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log(pair[0], pair[1]);
       }
 
-      const { data } = await axios.post(`${API_BASE_URL}/signup`, formData, {
+      const { data } = await axios.post(`${baseUrl}/auth/signup`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
       });
       
@@ -97,7 +98,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 const updateUser = async (updatedData: FormData) => {
   try {
-      const response = await axios.put(`${API_BASE_URL}/update-profile`, updatedData, {
+      const response = await axios.put(`${baseUrl}/auth/update-profile`, updatedData, {
           headers: {
               Authorization: `Bearer ${token}`,
               "Content-Type": "multipart/form-data",

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import Button from '../components/UI_Elements/Button'
 
 const Dashboard: React.FC = () => {
     const {user, logout } = useAuth();
     const navigate = useNavigate();
-    const [error, setError] = useState<string | null>(null);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // Ensure profilePicture is a string (handle File objects)
@@ -22,9 +22,7 @@ const Dashboard: React.FC = () => {
         }
     };
 
-    if (error) {
-        return <p style={{ color: "red" }}>{error}</p>;
-    }
+
 
     if (!user) {
         return (
@@ -35,7 +33,7 @@ const Dashboard: React.FC = () => {
     }
 
     return (
-        <div className="container mx-auto p-6 max-w-md bg-white shadow-lg rounded-lg">
+      <div className="container mx-auto p-6 max-w-md bg-white shadow-lg rounded-lg">
         {/* Profile Picture */}
         <div className="flex flex-col items-center">
           <img
@@ -55,23 +53,21 @@ const Dashboard: React.FC = () => {
   
         {/* Actions */}
         <div className="mt-6 flex flex-col items-center">
-          <button
-            style={{backgroundColor: '#3333FF', }}
+          <Button
             onClick={() => navigate("/settings")}
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
+            className="w-full bg-blue-500 text-white hover:bg-blue-600 "
           >
             Edit Profile
-          </button>
-          <button
-            style={{backgroundColor: '#f2401a', }}
+          </Button>
+          <Button
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className={`w-full mt-2 py-2 rounded-md transition ${
+            className={`w-full mt-2  ${
               isLoggingOut ? " cursor-not-allowed" : "bg-red-500 hover:bg-red-600"
             } text-white`}
           >
             {isLoggingOut ? "Logging out..." : "Logout"}
-          </button>
+          </Button>
         </div>
       </div>
     );

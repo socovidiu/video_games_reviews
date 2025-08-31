@@ -74,16 +74,16 @@ const HomePage: React.FC = () => {
 
       {/* Left Sidebar */}
       <GameFilterSidebar 
-      genre={genre} 
-      setGenre={setGenre} 
-      sortOrder={sortOrder} 
-      setSortOrder={setSortOrder} 
-      minRating={minRating}
-      setMinRating={setMinRating}
-      maxRating={maxRating}
-      setMaxRating={setMaxRating}
-      releaseYear={releaseYear}
-      setReleaseYear={setReleaseYear}
+        genre={genre} 
+        setGenre={setGenre} 
+        sortOrder={sortOrder} 
+        setSortOrder={setSortOrder} 
+        minRating={minRating}
+        setMinRating={setMinRating}
+        maxRating={maxRating}
+        setMaxRating={setMaxRating}
+        releaseYear={releaseYear}
+        setReleaseYear={setReleaseYear}
       />
 
       {/* Right Content */}
